@@ -50,6 +50,7 @@ class AreaRect(pygame.sprite.Sprite):
     def __init__(self, group, width, height, x, y, bg="#BFBECD"):
         super().__init__(group)
         group.add(self)
+        self.group = group
         self.width = width
         self.height = height
         self.x, self.y = x, y
@@ -66,10 +67,34 @@ class AreaRect(pygame.sprite.Sprite):
         pygame.draw.rect(self.image, pygame.Color(bg), (x, y, width, height), 0)
 
     def add_button(self, x, y, width, height, text, text_offset_x=0, text_offset_y=0, size=15, border=""):
+        Button(self.group, self.x + x + text_offset_x, self.y + y + text_offset_y, width, height, text, border, size, text_offset_x, text_offset_y)
+
+class Button(pygame.sprite.Sprite):
+    def __init__(self, group, x, y, width, height, text, border, size, text_offset_x, text_offset_y=0):
+        super().__init__(group)
+        self.width = width
+        self.height = height
+        self.image = pygame.Surface((self.width, self.height))
         if border:
             pygame.draw.rect(self.image, pygame.Color(border), (x - 1, y - 1, width + 2, height + 2), 1)
-        pygame.draw.rect(self.image, pygame.Color(BUTTON_BG), (x, y, width, height), 0)
+        self.image.fill(pygame.Color(BUTTON_BG))
+        self.rect = self.image.get_rect()
+        self.rect.x, self.rect.y = x, y
+        self.text = text
         self.add_text(text, x + text_offset_x, y + text_offset_y, size)
+
+
+    def add_text(self, text, x, y, size=15, bold=False):
+        font = get_font(size, bold=False)
+        text = font.render(text, 1, pygame.Color("#323232"))
+        self.image.blit(text, (0, 0))
+
+    def boom(self):
+        print(self.text)
+
+    def get_event(self, event):
+        if self.rect.collidepoint(event.pos):
+            self.boom()
 
 
 def start_window():
@@ -161,6 +186,10 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            for e in levels_window_sprites:
+                if e.__class__.__name__ == "Button":
+                    e.get_event(event)
     start_window_sprites.update()
     start_window_sprites.draw(screen)
 
