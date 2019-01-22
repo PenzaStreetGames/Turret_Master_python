@@ -117,15 +117,15 @@ def menu_window():
 
 def levels_window():
     cont_width, cont_height = 470, 550
-    window_content = AreaRect(menu_window_sprites, cont_width, cont_height, WIDTH // 2 - cont_width // 2,
+    window_content = AreaRect(levels_window_sprites, cont_width, cont_height, WIDTH // 2 - cont_width // 2,
                               0, "#BFBECD")
     title_width, title_height = 400, 80
-    title = Title(menu_window_sprites, title_width, title_height, WIDTH // 2 - title_width // 2, 1, bg="#CDCDD3",
+    title = Title(levels_window_sprites, title_width, title_height, WIDTH // 2 - title_width // 2, 1, bg="#CDCDD3",
                   bg_border="#9A999F")
     title.set_text("Мастер турелей", title.x // 7, title.y + 10)
 
     title_menu_width, title_menu_height = 360, 80
-    title_menu = Title(menu_window_sprites, title_menu_width, title_menu_height, WIDTH // 2 - title_menu_width // 2,
+    title_menu = Title(levels_window_sprites, title_menu_width, title_menu_height, WIDTH // 2 - title_menu_width // 2,
                        100, bg="#CDCDD3", bg_border="#9A999F")
     title_menu.set_text("Выбор уровня", title.x // 4, title.y + 20, size=30)
 
@@ -139,7 +139,7 @@ def levels_window():
                                       5, 30, size=11, border="#9A999F")
 
     score_width, score_height = 470, 40
-    score_content = AreaRect(menu_window_sprites, score_width, score_height, WIDTH // 2 - score_width // 2,
+    score_content = AreaRect(levels_window_sprites, score_width, score_height, WIDTH // 2 - score_width // 2,
                              window_content.y + window_content.height + 2, "#BFBECD")
     score_content.add_text("Счёт игрока: 0", score_width // 4 + 15, 10, size=18)
 
