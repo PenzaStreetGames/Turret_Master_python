@@ -7,8 +7,11 @@ fps = 40
 WINDOW_PADDING = 10
 BASE_BUTTONS_WIDTH = 250
 BASE_BUTTONS_HEIGHT = 45
+LEVELS_BUTTONS_WIDTH = 75
+LEVELS_BUTTONS_HEIGHT = 75
 BUTTON_BG = "#F5F5F5"
 BG_COLOR = "#9995BD"
+
 
 def load_image(name, colorkey=None):
     fullname = os.path.join('data', name)
@@ -108,8 +111,38 @@ def menu_window():
 
     score_width, score_height = 470, 40
     score_content = AreaRect(menu_window_sprites, score_width, score_height, WIDTH // 2 - score_width // 2,
-                              window_content.y + window_content.height + 2, "#BFBECD")
+                             window_content.y + window_content.height + 2, "#BFBECD")
     score_content.add_text("Счёт игрока: 0", score_width // 4 + 15, 10, size=18)
+
+
+def levels_window():
+    cont_width, cont_height = 470, 550
+    window_content = AreaRect(menu_window_sprites, cont_width, cont_height, WIDTH // 2 - cont_width // 2,
+                              0, "#BFBECD")
+    title_width, title_height = 400, 80
+    title = Title(menu_window_sprites, title_width, title_height, WIDTH // 2 - title_width // 2, 1, bg="#CDCDD3",
+                  bg_border="#9A999F")
+    title.set_text("Мастер турелей", title.x // 7, title.y + 10)
+
+    title_menu_width, title_menu_height = 360, 80
+    title_menu = Title(menu_window_sprites, title_menu_width, title_menu_height, WIDTH // 2 - title_menu_width // 2,
+                       100, bg="#CDCDD3", bg_border="#9A999F")
+    title_menu.set_text("Выбор уровня", title.x // 4, title.y + 20, size=30)
+
+    buttons_data = [["Обучение", "Уровень 1", "Уровень 2"], ["Уровень 3", "Уровень 4", "Уровень 5"],
+                    ["Уровень 6", "Уровень 7", "Уровень 8"]]
+    for i in range(len(buttons_data)):
+        for j in range(len(buttons_data[i])):
+            window_content.add_button((cont_width // 2 - LEVELS_BUTTONS_WIDTH * 1.7) + 90 * j,
+                                      (160 + LEVELS_BUTTONS_HEIGHT) + 90 * i,
+                                      LEVELS_BUTTONS_WIDTH, LEVELS_BUTTONS_HEIGHT, buttons_data[i][j],
+                                      5, 30, size=11, border="#9A999F")
+
+    score_width, score_height = 470, 40
+    score_content = AreaRect(menu_window_sprites, score_width, score_height, WIDTH // 2 - score_width // 2,
+                             window_content.y + window_content.height + 2, "#BFBECD")
+    score_content.add_text("Счёт игрока: 0", score_width // 4 + 15, 10, size=18)
+
 
 pygame.init()
 screen = pygame.display.set_mode(size)
@@ -117,8 +150,12 @@ running = True
 screen.fill(pygame.Color(BG_COLOR))
 start_window_sprites = pygame.sprite.Group()
 menu_window_sprites = pygame.sprite.Group()
+levels_window_sprites = pygame.sprite.Group()
+
 # start_window()
-menu_window()
+# menu_window()
+levels_window()
+
 while running:
 
     for event in pygame.event.get():
@@ -130,6 +167,7 @@ while running:
     menu_window_sprites.update()
     menu_window_sprites.draw(screen)
 
-
+    levels_window_sprites.update()
+    levels_window_sprites.draw(screen)
 
     pygame.display.flip()
