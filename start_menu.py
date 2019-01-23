@@ -63,31 +63,39 @@ class AreaRect(pygame.sprite.Sprite):
         text = font.render(text, 1, pygame.Color("#323232"))
         self.image.blit(text, (x, y))
 
-    def add_rect(self, x, y, width, height, bg):
-        pygame.draw.rect(self.image, pygame.Color(bg), (x, y, width, height), 0)
+    def add_rect(self, x, y, width, height, bg, border=False):
+        if border:
+            pygame.draw.rect(self.image, pygame.Color(border), (x, y, width + 2, height + 2), 1)
+        pygame.draw.rect(self.image, pygame.Color(bg), (x + 1, y + 1, width, height), 0)
 
     def add_button(self, x, y, width, height, text, text_offset_x=0, text_offset_y=0, size=15, border=""):
-        Button(self.group, self.x + x + text_offset_x, self.y + y + text_offset_y, width, height, text, border, size, text_offset_x, text_offset_y)
+        Button(self.group, self.x + x, self.y + y, width, height, text, border, size, text_offset_x, text_offset_y)
+
 
 class Button(pygame.sprite.Sprite):
-    def __init__(self, group, x, y, width, height, text, border, size, text_offset_x, text_offset_y=0):
+    def __init__(self, group, x, y, width, height, text, border, size, text_offset_x, text_offset_y):
         super().__init__(group)
         self.width = width
         self.height = height
-        self.image = pygame.Surface((self.width, self.height))
         if border:
-            pygame.draw.rect(self.image, pygame.Color(border), (x - 1, y - 1, width + 2, height + 2), 1)
-        self.image.fill(pygame.Color(BUTTON_BG))
+            self.image = pygame.Surface((self.width + 2, self.height + 2))
+            self.image.fill(pygame.Color(border))
+            surf = pygame.Surface((self.width, self.height))
+            surf.fill(pygame.Color(BUTTON_BG))
+            self.image.blit(surf, (1, 1))
+        else:
+            self.image = pygame.Surface((self.width, self.height))
+            self.image.fill(pygame.Color(BUTTON_BG))
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = x, y
         self.text = text
-        self.add_text(text, x + text_offset_x, y + text_offset_y, size)
+        self.add_text(text, text_offset_x, text_offset_y, size)
 
 
     def add_text(self, text, x, y, size=15, bold=False):
         font = get_font(size, bold=False)
         text = font.render(text, 1, pygame.Color("#323232"))
-        self.image.blit(text, (0, 0))
+        self.image.blit(text, (x, y))
 
     def boom(self):
         print(self.text)
@@ -98,6 +106,8 @@ class Button(pygame.sprite.Sprite):
 
 
 def start_window():
+    screen.fill(pygame.Color(BG_COLOR))
+
     title_width, title_height = 400, 80
     title = Title(start_window_sprites, title_width, title_height, WIDTH // 2 - title_width // 2, 1)
     title.set_text("Мастер турелей", title.x // 7, title.y + 10)
@@ -110,12 +120,14 @@ def start_window():
     window_content = AreaRect(start_window_sprites, auth_header.width, auth_header.height * 4, auth_header.x,
                               auth_header.y + auth_header.height + 1, "#BFBECD")
     window_content.add_text("Введите имя вашего игрового профиля.", 10, 20, size=13)
-    window_content.add_rect(auth_header.width // 4.5, 80, auth_header.width // 1.8, 50, "#ffffff")
+    window_content.add_rect(auth_header.width // 4.5, 80, auth_header.width // 1.8, 50, "#ffffff", border="#9A999F")
     window_content.add_button(auth_header.width // 4.5 + 20, 170,
-                              auth_header.width // 1.8 - 40, 35, "Начать игру", 20, 10)
+                              auth_header.width // 1.8 - 40, 35, "Начать игру", 20, 10, border="#9A999F")
 
 
 def menu_window():
+    screen.fill(pygame.Color(BG_COLOR))
+
     cont_width, cont_height = 470, 550
     window_content = AreaRect(menu_window_sprites, cont_width, cont_height, WIDTH // 2 - cont_width // 2,
                               0, "#BFBECD")
@@ -141,6 +153,8 @@ def menu_window():
 
 
 def levels_window():
+    screen.fill(pygame.Color(BG_COLOR))
+
     cont_width, cont_height = 470, 550
     window_content = AreaRect(levels_window_sprites, cont_width, cont_height, WIDTH // 2 - cont_width // 2,
                               0, "#BFBECD")
@@ -169,17 +183,30 @@ def levels_window():
     score_content.add_text("Счёт игрока: 0", score_width // 4 + 15, 10, size=18)
 
 
+def game_process_window():
+    screen.fill(pygame.Color("#5D5D5C"))
+
+    cont_width, cont_height = WIDTH, 80
+    window_content_top = AreaRect(levels_window_sprites, cont_width, cont_height, WIDTH // 2 - cont_width // 2,
+                              0, "#A4A4A2")
+    window_content_top.add_text("Мастер турелей", cont_width // 2 - 160, 10, size=35)
+    window_content_top.add_button(window_content_top.width - 115, 15,
+                                  100, 45, "Пауза", 25, 15, border="#9A999F")
+    window_content_bottom = AreaRect(levels_window_sprites, cont_width, cont_height, WIDTH // 2 - cont_width // 2,
+                                  HEIGHT - cont_height, "#A4A4A2")
+
 pygame.init()
 screen = pygame.display.set_mode(size)
 running = True
-screen.fill(pygame.Color(BG_COLOR))
 start_window_sprites = pygame.sprite.Group()
 menu_window_sprites = pygame.sprite.Group()
 levels_window_sprites = pygame.sprite.Group()
+game_process_sprites = pygame.sprite.Group()
 
 # start_window()
 # menu_window()
-levels_window()
+# levels_window()
+game_process_window()
 
 while running:
 
