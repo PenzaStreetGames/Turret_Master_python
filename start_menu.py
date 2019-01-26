@@ -102,6 +102,7 @@ class Button(pygame.sprite.Sprite):
     def get_event(self, event):
         if self.rect.collidepoint(event.pos):
             self.boom()
+            scene_init(self.text)
 
 
 def start_window():
@@ -175,7 +176,9 @@ def levels_window():
                                       (160 + LEVELS_BUTTONS_HEIGHT) + 90 * i,
                                       LEVELS_BUTTONS_WIDTH, LEVELS_BUTTONS_HEIGHT, buttons_data[i][j],
                                       5, 30, size=11, border="#9A999F")
-
+    window_content.add_button(cont_width // 2 - LEVELS_BUTTONS_WIDTH * 1.7,
+                              (160 + LEVELS_BUTTONS_HEIGHT) + 90 * (i + 1),
+                              (LEVELS_BUTTONS_WIDTH + 10) * 3, 35, "Назад в главное меню", 25, 10, border="#9A999F")
     score_width, score_height = 470, 40
     score_content = AreaRect(levels_window_sprites, score_width, score_height, WIDTH // 2 - score_width // 2,
                              window_content.y + window_content.height + 2, "#BFBECD")
@@ -231,6 +234,19 @@ def end_modal():
     pause_window.add_button(130, 200, cont_width // 2.5, 35, "Главное меню", 5, 10, border="#9A999F", size=13)
 
 
+def scene_init(scene):
+    scenes = {"Начать игру": menu_window,
+              "Выбрать уровень": levels_window,
+              "Главное меню": levels_window,
+              "Назад в главное меню": menu_window,
+              "Уровень 1": game_process_window,
+              }
+    if scene in scenes:
+        for group in groups:
+            group.empty()
+        scenes[scene]()
+
+
 pygame.init()
 screen = pygame.display.set_mode(size)
 running = True
@@ -240,10 +256,10 @@ levels_window_sprites = pygame.sprite.Group()
 game_process_sprites = pygame.sprite.Group()
 pause_modal_sprites = pygame.sprite.Group()
 end_modal_sprites = pygame.sprite.Group()
-# start_window()
+start_window()
 # menu_window()
 # levels_window()
-game_process_window()
+# game_process_window()
 groups = [start_window_sprites, menu_window_sprites,
           levels_window_sprites, game_process_sprites, pause_modal_sprites,
           end_modal_sprites]
@@ -252,7 +268,7 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        if event.type == pygame.MOUSEBUTTONDOWN:
+        if event.type == pygame.MOUSEBUTTONUP:
             for group in groups:
                 for e in group:
                     if e.__class__.__name__ == "Button":
