@@ -53,7 +53,9 @@ class Sprite(pygame.sprite.Sprite):
 
     def __init__(self, group, pos, size, image):
         super().__init__(group)
-        self.rect = pygame.Rect(*pos, *size)
+        self.rect = pygame.Rect(pos, size)
+        self.rect.center = pos
+        self.rect.size = size
         self.center = [pos[0] + size[0] // 2, pos[1] + size[1] // 2]
         self.image = textures[image]
         self.image = pygame.transform.scale(self.image, size)
@@ -94,13 +96,13 @@ class Turret(Sprite):
 
     def shot(self):
         if self.turret_type == "machine_gun":
-            bullet = Shell(shells, self.pos, self.size, "bullet",
-                           rot=self.rotation + 90, speed=10)
+            bullet = Shell(shells, self.rect.center, [12, 18], "bullet",
+                           rot=self.rotation + 90, speed=40)
 
 
 class Shell(Sprite):
 
-    def __init__(self, group, pos, size, image, rot=0, life=2, speed=10):
+    def __init__(self, group, pos, size, image, rot=0, life=2, speed=100):
         super().__init__(group, pos, size, image)
         self.rotation = rot
         self.image = pygame.transform.rotate(self.image, rot)
@@ -126,7 +128,19 @@ pygame.display.set_icon(load_image("game_icon.png", color_key=-1))
 clock = pygame.time.Clock()
 
 textures = {"machine_gun": load_image("turrets/machine_gun.png"),
-            "bullet": load_image("shells/bomb.png")}
+            "laser_turret": load_image("turrets/laser_turret.png"),
+            "rocket_launcher": load_image("turrets/rocket_launcher.png"),
+            "spitfire": load_image("turrets/spitfire.png"),
+            "heavy_turret": load_image("turrets/heavy_turret.png"),
+            "grenade_gun": load_image("turrets/grenade_gun.png"),
+            "laser_shell": load_image("shells/laser_shell.png"),
+            "fire_clot": load_image("shells/fire_clot.png"),
+            "bullet": load_image("shells/bullet.png"),
+            "heavy_shell": load_image("shells/laser_shell.png"),
+            "rocket": load_image("shells/explosion.png"),
+            "grenade": load_image("shells/grenade.png"),
+            "explosion": load_image("shells/explosion.png"),
+            "grenade_explosion": load_image("shells/explosion_grenade.png")}
 
 game_controller = GameController()
 all_sprites = SpriteGroup()
@@ -137,8 +151,8 @@ machine_gun = Turret(turrets, (200, 200), (72, 72), "machine_gun")
 
 def render():
     screen.fill(pygame.Color("black"))
-    turrets.draw(screen)
     shells.draw(screen)
+    turrets.draw(screen)
 
 
 mouse_click = False
