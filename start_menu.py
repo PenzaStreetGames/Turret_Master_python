@@ -91,7 +91,6 @@ class Button(pygame.sprite.Sprite):
         self.text = text
         self.add_text(text, text_offset_x, text_offset_y, size)
 
-
     def add_text(self, text, x, y, size=15, bold=False):
         font = get_font(size, bold=False)
         text = font.render(text, 1, pygame.Color("#323232"))
@@ -187,13 +186,50 @@ def game_process_window():
     screen.fill(pygame.Color("#5D5D5C"))
 
     cont_width, cont_height = WIDTH, 80
-    window_content_top = AreaRect(levels_window_sprites, cont_width, cont_height, WIDTH // 2 - cont_width // 2,
-                              0, "#A4A4A2")
+    window_content_top = AreaRect(game_process_sprites, cont_width, cont_height, WIDTH // 2 - cont_width // 2,
+                                  0, "#A4A4A2")
     window_content_top.add_text("Мастер турелей", cont_width // 2 - 160, 10, size=35)
     window_content_top.add_button(window_content_top.width - 115, 15,
                                   100, 45, "Пауза", 25, 15, border="#9A999F")
-    window_content_bottom = AreaRect(levels_window_sprites, cont_width, cont_height, WIDTH // 2 - cont_width // 2,
-                                  HEIGHT - cont_height, "#A4A4A2")
+    window_content_bottom = AreaRect(game_process_sprites, cont_width, cont_height, WIDTH // 2 - cont_width // 2,
+                                     HEIGHT - cont_height, "#A4A4A2")
+    window_content_bottom.add_rect(10, 10,
+                                   120, cont_height - 20, bg="#B7B7B5", border="#9A999F")
+    window_content_bottom.add_text("Уровень 1", 20, 30)
+
+    window_content_bottom.add_rect(cont_width - 130, 10,
+                                   120, cont_height - 20, bg="#B7B7B5", border="#9A999F")
+    window_content_bottom.add_text("Счёт: 0", cont_width - 120, 30)
+
+    window_content_bottom.add_rect(cont_width - cont_width // 1.55, 10,
+                                   240, cont_height - 20, bg="#B7B7B5", border="#9A999F")
+    window_content_bottom.add_text("Прогресс уровня", cont_width - cont_width // 1.69, 15)
+
+    window_content_bottom.add_rect(cont_width - cont_width // 1.65, 50,
+                                   175, cont_height // 8, bg="#009113", border="#9A999F")
+
+
+def pause_modal():
+    cont_width, cont_height = 300, 250
+    pause_window = AreaRect(pause_modal_sprites, cont_width, cont_height, WIDTH // 2 - cont_width // 2, 130, "#A4A4A2")
+    pause_window.add_rect(10, 10, cont_width - 20, 50, bg="#B7B7B5", border="#9A999F")
+    pause_window.add_text("Пауза", cont_width // 3, 20, size=25)
+    pause_window.add_button(50, 95, cont_width - 100, 45, "Продолжить", 15, 10, border="#9A999F", size=18)
+
+    pause_window.add_button(50, 150, cont_width - 100, 45, "Главное меню", 15, 10, border="#9A999F", size=18)
+
+
+def end_modal():
+    cont_width, cont_height = 300, 250
+    pause_window = AreaRect(end_modal_sprites, cont_width, cont_height, WIDTH // 2 - cont_width // 2, 130, "#A4A4A2")
+    pause_window.add_rect(10, 10, cont_width - 20, 50, bg="#B7B7B5", border="#9A999F")
+    pause_window.add_text("Уровень пройден", cont_width // 6, 20, size=20)
+    pause_window.add_rect(50, 100, cont_width - 100, 50, bg="#B7B7B5", border="#9A999F")
+    pause_window.add_text("Счёт: 0", cont_width // 3, 120)
+    pause_window.add_button(50, 200, cont_width // 4, 35, "Рестарт", 5, 10, border="#9A999F", size=13)
+
+    pause_window.add_button(130, 200, cont_width // 2.5, 35, "Главное меню", 5, 10, border="#9A999F", size=13)
+
 
 pygame.init()
 screen = pygame.display.set_mode(size)
@@ -202,28 +238,30 @@ start_window_sprites = pygame.sprite.Group()
 menu_window_sprites = pygame.sprite.Group()
 levels_window_sprites = pygame.sprite.Group()
 game_process_sprites = pygame.sprite.Group()
-
+pause_modal_sprites = pygame.sprite.Group()
+end_modal_sprites = pygame.sprite.Group()
 # start_window()
 # menu_window()
 # levels_window()
 game_process_window()
-
+groups = [start_window_sprites, menu_window_sprites,
+          levels_window_sprites, game_process_sprites, pause_modal_sprites,
+          end_modal_sprites]
 while running:
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
         if event.type == pygame.MOUSEBUTTONDOWN:
-            for e in levels_window_sprites:
-                if e.__class__.__name__ == "Button":
-                    e.get_event(event)
-    start_window_sprites.update()
-    start_window_sprites.draw(screen)
-
-    menu_window_sprites.update()
-    menu_window_sprites.draw(screen)
-
-    levels_window_sprites.update()
-    levels_window_sprites.draw(screen)
+            for group in groups:
+                for e in group:
+                    if e.__class__.__name__ == "Button":
+                        e.get_event(event)
+                        if e.text == "Пауза":
+                            pause_modal_sprites.empty()
+                            pause_modal()
+    for group in groups:
+        group.update()
+        group.draw(screen)
 
     pygame.display.flip()
