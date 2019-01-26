@@ -1,0 +1,17 @@
+{
+  "turrets":
+  {
+    "1": ["machine_gun"],
+    "2": ["machine_gun", "heavy_turret", "laser_turret"],
+    "3": ["rocket_launcher", "machine_gun", "spitfire"],
+    "4": ["spitfire", "grenade_gun", "machine_gun"],
+    "5": ["spitfire", "laser_turret", "heavy_turret"],
+    "6": ["rocket_launcher", "spitfire", "grenade_gun"]
+  },
+  "turret_positions":
+  {
+    "1": [50, 100],
+    "2": [100, 200],
+    "3": [150, 300]
+  }
+}

@@ -1,6 +1,8 @@
 import pygame
 import os
 import math
+import random
+import json
 
 FPS = 25
 
@@ -24,14 +26,28 @@ class GameController:
 
     def __init__(self):
         self.frames = 0
-        self.initialization()
 
     def update(self):
         shells.get_my_event("check_death")
         self.frames += 1
 
     def initialization(self):
-        pass
+        turret_gen.generate_turrets(2)
+
+
+class TurretGenerator:
+
+    def __init__(self):
+        self.turrets = SpriteGroup()
+        self.game_controller = game_controller
+
+    def generate_turrets(self, level):
+        turret_list = levels["turrets"][str(level)]
+        pos = levels["turret_positions"]
+        for i in range(len(turret_list)):
+            self.turrets.add(Turret(self.turrets, pos[str(i + 1)], (72, 72),
+                                    turret_list[i]))
+        turrets.add(self.turrets)
 
 
 class SpriteGroup(pygame.sprite.Group):
@@ -53,7 +69,7 @@ class Sprite(pygame.sprite.Sprite):
 
     def __init__(self, group, pos, size, image):
         super().__init__(group)
-        self.rect = pygame.Rect(pos, size)
+        self.rect = pygame.Rect(*pos, *size)
         self.rect.center = pos
         self.rect.size = size
         self.center = [pos[0] + size[0] // 2, pos[1] + size[1] // 2]
@@ -69,11 +85,13 @@ class Sprite(pygame.sprite.Sprite):
 
 class Turret(Sprite):
 
-    def __init__(self, group, pos, size, image):
+    def __init__(self, group, pos, size, image, shot_period=2):
         super().__init__(group, pos, size, image)
         self.reserve_image = self.image
         self.rotation = 90
         self.turret_type = image
+        self.shot_frame = 0
+        self.shot_period = shot_period
 
     def get_event(self, event):
         if event.type == pygame.MOUSEMOTION:
@@ -95,19 +113,37 @@ class Turret(Sprite):
         self.rotation = angle
 
     def shot(self):
-        if self.turret_type == "machine_gun":
-            bullet = Shell(shells, self.rect.center, [12, 18], "bullet",
-                           rot=self.rotation + 90, speed=40)
+        if self.shot_period == self.shot_frame:
+            if self.turret_type == "machine_gun":
+                bullet = Shell(shells, self.rect.center, [12, 18], "bullet",
+                               rot=self.rotation + 90, speed=40)
+            self.shot_frame = 0
+        else:
+            self.shot_frame += 1
+
+
+class Scale(Sprite):
+
+    def __init__(self, turret, scale):
+        self.turret = turret
+        if scale == "health":
+            self.images = textures["health"]
+        elif scale == "ammunition":
+            self.images = textures["bullets"]
+
+    def update(self):
+        pass
 
 
 class Shell(Sprite):
 
     def __init__(self, group, pos, size, image, rot=0, life=2, speed=100):
         super().__init__(group, pos, size, image)
+        self.rect.y += random.random() * 3
         self.rotation = rot
         self.image = pygame.transform.rotate(self.image, rot)
         self.life = life * FPS
-        self.speed = speed
+        self.speed = speed + random.random() * speed * 0.1
 
     def check_death(self):
         if game_controller.frames - self.start_frame == self.life:
@@ -128,6 +164,7 @@ pygame.display.set_icon(load_image("game_icon.png", color_key=-1))
 clock = pygame.time.Clock()
 
 textures = {"machine_gun": load_image("turrets/machine_gun.png"),
+            "machine_gun_shoot": load_image("turrets/machine_gun_shoot.png"),
             "laser_turret": load_image("turrets/laser_turret.png"),
             "rocket_launcher": load_image("turrets/rocket_launcher.png"),
             "spitfire": load_image("turrets/spitfire.png"),
@@ -140,13 +177,23 @@ textures = {"machine_gun": load_image("turrets/machine_gun.png"),
             "rocket": load_image("shells/explosion.png"),
             "grenade": load_image("shells/grenade.png"),
             "explosion": load_image("shells/explosion.png"),
-            "grenade_explosion": load_image("shells/explosion_grenade.png")}
+            "grenade_explosion": load_image("shells/explosion_grenade.png"),
+            "health": [f"scales/heath_bar/heat{image}.png"
+                       for image in range(11)],
+            "bullets": [f"scales/ammunition/bullet{image}.png"
+                       for image in range(6)]}
+
+with open("levels.json", "r", encoding="utf-8") as infile:
+    levels = json.loads(infile.read())
+
+turret_properties = {}
 
 game_controller = GameController()
+turret_gen = TurretGenerator()
 all_sprites = SpriteGroup()
 turrets = SpriteGroup()
 shells = SpriteGroup()
-machine_gun = Turret(turrets, (200, 200), (72, 72), "machine_gun")
+game_controller.initialization()
 
 
 def render():
