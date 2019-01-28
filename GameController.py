@@ -9,9 +9,11 @@ class GameController:
         self.textures = textures
         self.levels = levels
         self.shells = SpriteGroup()
+        self.interface = SpriteGroup()
 
     def update(self):
         self.shells.get_my_event("check_death")
+        self.turret_gen.update()
         self.frames += 1
 
     def set_turret_gen(self, turret_gen):

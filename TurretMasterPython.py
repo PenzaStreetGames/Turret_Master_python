@@ -54,7 +54,8 @@ textures = {"machine_gun": load_image("turrets/machine_gun.png"),
                        for image in range(11)],
             "bullets": [load_image(f"scales/ammunition_bar/bullet{image}.png")
                         for image in range(6)],
-            "label": load_image("label.png")}
+            "label": load_image("label.png"),
+            "background": load_image("backgrounds/stage1.png")}
 
 with open("levels.json", "r", encoding="utf-8") as infile:
     levels = json.loads(infile.read())
@@ -67,8 +68,11 @@ game_controller.initialization()
 
 def render():
     screen.fill(pygame.Color("black"))
+    background = pygame.transform.scale(textures["background"], screen_size)
+    screen.blit(background, [0, 0])
     game_controller.shells.draw(screen)
     game_controller.turret_gen.turrets.draw(screen)
+    game_controller.interface.draw(screen)
 
 
 mouse_click = False

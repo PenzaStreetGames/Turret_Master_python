@@ -17,3 +17,7 @@ class TurretGenerator:
                                     image=textures[turret_list[i]],
                                     game_controller=self.game_controller,
                                     turret_type=turret_list[i]))
+
+    def update(self):
+        for turret in self.turrets:
+            turret.update()

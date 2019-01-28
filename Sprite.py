@@ -11,6 +11,7 @@ class Sprite(pygame.sprite.Sprite):
         self.center = [pos[0] + size[0] // 2, pos[1] + size[1] // 2]
         self.image = image
         self.image = pygame.transform.scale(self.image, size)
+        self.reserve_image = self.image
         self.start_frame = game_controller.frames
         self.pos = pos
         self.size = size
@@ -18,3 +19,11 @@ class Sprite(pygame.sprite.Sprite):
 
     def get_event(self, event):
         pass
+
+    def set_image(self, image, pos, size):
+        self.center = [pos[0] + size[0] // 2, pos[1] + size[1] // 2]
+        self.image = image
+        self.image = pygame.transform.scale(self.image, size)
+        self.reserve_image = self.image
+        self.pos = pos
+        self.size = size

@@ -13,5 +13,14 @@
     "1": [100, 300],
     "2": [150, 400],
     "3": [200, 500]
+  },
+  "turret_max_shells":
+  {
+    "machine_gun": 100,
+    "rocket_launcher": 10,
+    "grenade_gun": 12,
+    "heavy_turret": 10,
+    "spitfire": 100,
+    "laser_turret": 100
   }
 }
