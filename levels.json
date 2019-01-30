@@ -1,0 +1,26 @@
+{
+  "turrets":
+  {
+    "1": ["machine_gun"],
+    "2": ["machine_gun", "heavy_turret", "laser_turret"],
+    "3": ["rocket_launcher", "machine_gun", "spitfire"],
+    "4": ["spitfire", "grenade_gun", "machine_gun"],
+    "5": ["spitfire", "laser_turret", "heavy_turret"],
+    "6": ["rocket_launcher", "spitfire", "grenade_gun"]
+  },
+  "turret_positions":
+  {
+    "1": [100, 300],
+    "2": [150, 400],
+    "3": [200, 500]
+  },
+  "turret_max_shells":
+  {
+    "machine_gun": 100,
+    "rocket_launcher": 10,
+    "grenade_gun": 12,
+    "heavy_turret": 10,
+    "spitfire": 100,
+    "laser_turret": 100
+  }
+}
