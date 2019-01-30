@@ -13,7 +13,7 @@ class Scale(Sprite):
             self.images = textures["bullets"]
         self.turret = turret
         super().__init__(group, pos, size, game_controller=game_controller,
-                         image=textures["bullets"][-1])
+                         image=self.images[-1])
         self.radius = self.pos[1] - self.turret.pos[1]
         self.max_shells = self.turret.max_shells
 
@@ -23,7 +23,6 @@ class Scale(Sprite):
         index = index if index < len(self.images) else len(self.images) - 1
         index = 0 if index < 0 else index
         index = 0 if shells == 0 else index
-        print(index)
         self.set_image(self.images[int(index)], self.pos, self.size)
         self.rotate()
 

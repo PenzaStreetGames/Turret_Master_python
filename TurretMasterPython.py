@@ -45,7 +45,7 @@ textures = {"machine_gun": load_image("turrets/machine_gun.png"),
             "laser_shell": load_image("shells/laser_shell.png"),
             "fire_clot": load_image("shells/fire_clot.png"),
             "bullet": load_image("shells/bullet.png"),
-            "heavy_shell": load_image("shells/laser_shell.png"),
+            "heavy_shell": load_image("shells/heavy_shell.png"),
             "rocket": load_image("shells/explosion.png"),
             "grenade": load_image("shells/grenade.png"),
             "explosion": load_image("shells/explosion.png"),
@@ -60,7 +60,8 @@ textures = {"machine_gun": load_image("turrets/machine_gun.png"),
 with open("levels.json", "r", encoding="utf-8") as infile:
     levels = json.loads(infile.read())
 
-game_controller = GameController(textures=textures, levels=levels)
+game_controller = GameController(textures=textures, levels=levels,
+                                 screen=screen)
 game_controller.set_turret_gen(TurretGenerator(game_controller))
 all_sprites = SpriteGroup()
 game_controller.initialization()
@@ -78,6 +79,7 @@ def render():
 mouse_click = False
 running = True
 while running:
+    render()
     turrets = game_controller.turret_gen.turrets
     for event in pygame.event.get():
         if event.type == pygame.QUIT:

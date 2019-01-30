@@ -3,13 +3,14 @@ from SpriteGroup import SpriteGroup
 
 class GameController:
 
-    def __init__(self, textures=None, levels=None):
+    def __init__(self, textures=None, levels=None, screen=None):
         self.frames = 0
         self.turret_gen = None
         self.textures = textures
         self.levels = levels
         self.shells = SpriteGroup()
         self.interface = SpriteGroup()
+        self.screen = screen
 
     def update(self):
         self.shells.get_my_event("check_death")

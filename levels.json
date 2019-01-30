@@ -1,7 +1,7 @@
 {
   "turrets":
   {
-    "1": ["machine_gun"],
+    "1": ["laser_turret"],
     "2": ["machine_gun", "heavy_turret", "laser_turret"],
     "3": ["rocket_launcher", "machine_gun", "spitfire"],
     "4": ["spitfire", "grenade_gun", "machine_gun"],
@@ -22,5 +22,23 @@
     "heavy_turret": 10,
     "spitfire": 100,
     "laser_turret": 100
+  },
+  "shot_periods":
+  {
+    "machine_gun": 2,
+    "laser_turret": 1,
+    "spitfire": 2,
+    "rocket_launcher": 30,
+    "heavy_turret": 30,
+    "grenade_gun": 30
+  },
+  "repairing_speed":
+  {
+    "laser_turret": 1,
+    "machine_gun": 1,
+    "spitfire": 1,
+    "heavy_turret": 0.5,
+    "rocket_launcher": 0.5,
+    "grenade_gun": 0.5
   }
 }
