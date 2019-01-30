@@ -4,6 +4,7 @@ from Shell import Shell
 from Scale import Scale
 import math
 
+
 class Turret(Sprite):
 
     def __init__(self, group, pos, size, turret_type="machine_gun", image=None,
