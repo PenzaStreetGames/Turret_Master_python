@@ -1,5 +1,6 @@
 import pygame
 import os
+import constants
 
 size = WIDTH, HEIGHT = (800, 600)
 v = 50  # пикселей в секунду
@@ -72,6 +73,14 @@ class AreaRect(pygame.sprite.Sprite):
         Button(self.group, self.x + x, self.y + y, width, height, text, border, size, text_offset_x, text_offset_y)
 
 
+class TextField(AreaRect):
+    def __init__(self, group, width, height, x, y, bg="#BFBECD"):
+        super().__init__(group, width, height, x, y, bg="#BFBECD")
+
+    def get_event(self, event):
+        if self.rect.collidepoint(event.pos):
+            print("text...")
+
 class Button(pygame.sprite.Sprite):
     def __init__(self, group, x, y, width, height, text, border, size, text_offset_x, text_offset_y):
         super().__init__(group)
@@ -120,7 +129,7 @@ def start_window():
     window_content = AreaRect(start_window_sprites, auth_header.width, auth_header.height * 4, auth_header.x,
                               auth_header.y + auth_header.height + 1, "#BFBECD")
     window_content.add_text("Введите имя вашего игрового профиля.", 10, 20, size=13)
-    window_content.add_rect(auth_header.width // 4.5, 80, auth_header.width // 1.8, 50, "#ffffff", border="#9A999F")
+    window_content.add_button(auth_header.width // 4.5, 80, auth_header.width // 1.8, 50, "   ", 20, 10, border="#9A999F")
     window_content.add_button(auth_header.width // 4.5 + 20, 170,
                               auth_header.width // 1.8 - 40, 35, "Начать игру", 20, 10, border="#9A999F")
 
@@ -168,8 +177,7 @@ def levels_window():
                        100, bg="#CDCDD3", bg_border="#9A999F")
     title_menu.set_text("Выбор уровня", title.x // 4, title.y + 20, size=30)
 
-    buttons_data = [["Обучение", "Уровень 1", "Уровень 2"], ["Уровень 3", "Уровень 4", "Уровень 5"],
-                    ["Уровень 6", "Уровень 7", "Уровень 8"]]
+    buttons_data = [["Уровень 1", "Уровень 2", "Уровень 3"], ["Уровень 4", "Уровень 5", "Уровень 6"]]
     for i in range(len(buttons_data)):
         for j in range(len(buttons_data[i])):
             window_content.add_button((cont_width // 2 - LEVELS_BUTTONS_WIDTH * 1.7) + 90 * j,
@@ -234,20 +242,43 @@ def end_modal():
     pause_window.add_button(130, 200, cont_width // 2.5, 35, "Главное меню", 5, 10, border="#9A999F", size=13)
 
 
+def clear_pause():
+    pause_modal_sprites.empty()
+    game_process_window()
+
+
+def clear_win():
+    end_modal_sprites.empty()
+    game_process_window()
+
+
+def listen_input():
+    listen_text = True
+
 def scene_init(scene):
+    print("Loaded:", scene)
     scenes = {"Начать игру": menu_window,
               "Выбрать уровень": levels_window,
               "Главное меню": levels_window,
               "Назад в главное меню": menu_window,
               "Уровень 1": game_process_window,
               }
+    buttons = {
+        "Пауза": pause_modal,
+        "Продолжить": clear_pause,
+        "   ": listen_input,
+    }
     if scene in scenes:
         for group in groups:
             group.empty()
         scenes[scene]()
+    if scene in buttons:
+        buttons[scene]()
 
 
 pygame.init()
+clock = pygame.time.Clock()
+current_scene = None # !!!!!!!!!!!!!!!!!!!!!!! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 screen = pygame.display.set_mode(size)
 running = True
 start_window_sprites = pygame.sprite.Group()
@@ -263,8 +294,8 @@ start_window()
 groups = [start_window_sprites, menu_window_sprites,
           levels_window_sprites, game_process_sprites, pause_modal_sprites,
           end_modal_sprites]
-while running:
 
+while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -273,11 +304,9 @@ while running:
                 for e in group:
                     if e.__class__.__name__ == "Button":
                         e.get_event(event)
-                        if e.text == "Пауза":
-                            pause_modal_sprites.empty()
-                            pause_modal()
+
     for group in groups:
         group.update()
         group.draw(screen)
-
+    clock.tick(constants.FPS)
     pygame.display.flip()
