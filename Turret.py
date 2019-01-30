@@ -34,18 +34,23 @@ class Turret(Sprite):
         self.work = True
         self.repairing = False
         self.repair_speed = recharging_speed
+        self.pressed = False
 
     def get_event(self, event):
+        print(self.pressed)
         if event.type == pygame.MOUSEMOTION:
             self.rotate(*event.pos)
-            if self.turret_type == "laser_turret":
-                self.shot(event.pos)
+            if self.pressed and self.turret_type == "laser_turret":
+                self.press(event.pos)
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if not self.work:
                 if self.rect.collidepoint(event.pos):
                     self.repairing = True
             else:
                 self.shot(event.pos)
+            self.pressed = True
+        elif event.type == pygame.MOUSEBUTTONUP:
+            self.pressed = False
 
 
     def rotate(self, x, y):
@@ -86,11 +91,28 @@ class Turret(Sprite):
                                       image=textures["fire_clot"],
                                       rot=self.rotation + 90, speed=10,
                                       acceleration=-0.15)
-                elif self.turret_type == "laser_turret":
-                    pygame.draw.line(self.game_controller.screen,
-                                     pygame.Color("red"),
-                                     self.rect.center, pos, 10)
-                    pygame.display.flip()
+                self.shells -= 1
+                self.scale.update()
+            else:
+                self.shot_frame += 1
+        else:
+            self.work = False
+
+    def press(self, pos):
+        textures = self.game_controller.textures
+        if self.shells > 0 and self.work:
+            if self.shot_period == self.shot_frame:
+                shells = self.game_controller.shells
+                if self.turret_type == "laser_turret":
+                    x1, y1 = self.rect.center
+                    x2, y2 = pos
+                    radius = int(math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2))
+                    if radius >= 500:
+                        radius = 500
+                    ray = Shell(shells, self.rect.center, [10, radius * 2],
+                                game_controller=self.game_controller,
+                                image=textures["laser_shell"],
+                                rot=self.rotation - 90, speed=0, life=0.1)
                 self.shells -= 1
                 self.scale.update()
             else:

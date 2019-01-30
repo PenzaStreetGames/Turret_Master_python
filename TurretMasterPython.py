@@ -90,6 +90,7 @@ while running:
             mouse_click = event
             turrets.get_event(event)
         elif event.type == pygame.MOUSEBUTTONUP:
+            turrets.get_event(event)
             mouse_click = False
     if mouse_click:
         turrets.get_event(mouse_click)

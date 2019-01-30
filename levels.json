@@ -21,7 +21,7 @@
     "grenade_gun": 12,
     "heavy_turret": 10,
     "spitfire": 100,
-    "laser_turret": 100
+    "laser_turret": 500
   },
   "shot_periods":
   {
@@ -34,7 +34,7 @@
   },
   "repairing_speed":
   {
-    "laser_turret": 1,
+    "laser_turret": 5,
     "machine_gun": 1,
     "spitfire": 1,
     "heavy_turret": 0.5,
