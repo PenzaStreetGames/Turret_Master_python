@@ -8,16 +8,15 @@ import math
 class Turret(Sprite):
 
     def __init__(self, group, pos, size, turret_type="machine_gun", image=None,
-                 shot_period=2, recharging_speed=1,
                  game_controller=None):
         super().__init__(group, pos, size, image=image,
                          game_controller=game_controller)
+        levels = self.game_controller.levels
         self.rotation = 90
         self.turret_type = turret_type
-        self.shot_frame = 0
-        self.shot_period = shot_period
-        self.max_shells = self.game_controller.levels["turret_max_shells"][
-                                                        turret_type]
+        self.shot_period = levels["shot_periods"][turret_type]
+        self.shot_frame = self.shot_period
+        self.max_shells = levels["turret_max_shells"][turret_type]
         self.shells = self.max_shells
         if self.turret_type in ["machine_gun", "grenade_gun", "rocket_launcher",
                                 "heavy_turret"]:
@@ -34,11 +33,10 @@ class Turret(Sprite):
                                game_controller=self.game_controller)
         self.work = True
         self.repairing = False
-        self.repair_speed = recharging_speed
+        self.repair_speed = levels["repairing_speed"][turret_type]
         self.pressed = False
 
     def get_event(self, event):
-        print(self.pressed)
         if event.type == pygame.MOUSEMOTION:
             self.rotate(*event.pos)
             if self.pressed and self.turret_type == "laser_turret":
@@ -71,28 +69,20 @@ class Turret(Sprite):
 
     def shot(self, pos):
         textures = self.game_controller.textures
+        levels = self.game_controller.levels
         if self.shells > 0 and self.work:
             if self.shot_period == self.shot_frame:
+                shell_type = levels["turret_shells"][self.turret_type]
+                image = textures[shell_type]
                 shells = self.game_controller.shells
-                if self.turret_type == "machine_gun":
-                    bullet = Shell(shells, self.rect.center, [12, 18],
-                                   game_controller=self.game_controller,
-                                   image=textures["bullet"],
-                                   rot=self.rotation + 90, speed=40)
-                    self.shot_frame = 0
-                elif self.turret_type == "heavy_turret":
-                    heavy_shell = Shell(shells, self.rect.center, [16, 18],
-                                        game_controller=self.game_controller,
-                                        image=textures["heavy_shell"],
-                                        rot=self.rotation + 90, speed=30)
-                    self.shot_frame = 0
-                elif self.turret_type == "spitfire":
-                    fire_clot = Shell(shells, self.rect.center, [28, 28],
-                                      game_controller=self.game_controller,
-                                      image=textures["fire_clot"],
-                                      rot=self.rotation + 90, speed=10,
-                                      acceleration=-0.15)
+                size = levels["shell_sizes"][self.turret_type]
+                grenade = Shell(shells, self.rect.center, size,
+                                game_controller=self.game_controller,
+                                image=image,
+                                rot=self.rotation + 90,
+                                turret_type=self.turret_type, target=pos)
                 self.shells -= 1
+                self.shot_frame = 0
                 self.scale.update()
             else:
                 self.shot_frame += 1
@@ -113,7 +103,8 @@ class Turret(Sprite):
                     ray = Shell(shells, self.rect.center, [10, radius * 2],
                                 game_controller=self.game_controller,
                                 image=textures["laser_shell"],
-                                rot=self.rotation - 90, speed=0, life=0.1)
+                                rot=self.rotation - 90,
+                                turrret_type=self.turret_type)
                 self.shells -= 1
                 self.scale.update()
             else:

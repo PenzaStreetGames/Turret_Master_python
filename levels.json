@@ -1,7 +1,7 @@
 {
   "turrets":
   {
-    "1": ["laser_turret"],
+    "1": ["grenade_gun", "rocket_launcher"],
     "2": ["machine_gun", "heavy_turret", "laser_turret"],
     "3": ["rocket_launcher", "machine_gun", "spitfire"],
     "4": ["spitfire", "grenade_gun", "machine_gun"],
@@ -40,5 +40,52 @@
     "heavy_turret": 0.5,
     "rocket_launcher": 0.5,
     "grenade_gun": 0.5
-  }
+  },
+  "shells_life":
+  {
+    "machine_gun": 2,
+    "laser_turret": 0.1,
+    "spitfire": 2,
+    "heavy_turret": 2,
+    "rocket_launcher": 2,
+    "grenade_gun": 2
+  },
+  "shells_speed":
+  {
+    "machine_gun": 40,
+    "laser_turret": 0,
+    "spitfire": 10,
+    "heavy_turret": 30,
+    "rocket_launcher": 10,
+    "grenade_gun": 20
+  },
+  "shells_acceleration":
+  {
+    "machine_gun": 0,
+    "laser_turret": 0,
+    "spitfire": -0.15,
+    "heavy_turret": 0,
+    "rocket_launcher": 0.1,
+    "grenade_gun": 0
+  },
+  "turret_shells":
+  {
+    "laser_turret": "laser_shell",
+    "machine_gun": "bullet",
+    "heavy_turret": "heavy_shell",
+    "spitfire": "fire_clot",
+    "rocket_launcher": "rocket",
+    "grenade_gun": "grenade"
+  },
+  "shell_sizes":
+  {
+    "laser_turret": [10, 20],
+    "machine_gun": [12, 18],
+    "heavy_turret": [16, 18],
+    "spitfire": [28, 28],
+    "grenade_gun": [20, 24],
+    "rocket_launcher": [15, 30]
+  },
+  "explosion_size": [10, 100],
+  "explosion_life": 0.2
 }
