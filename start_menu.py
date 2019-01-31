@@ -72,14 +72,9 @@ class AreaRect(pygame.sprite.Sprite):
     def add_button(self, x, y, width, height, text, text_offset_x=0, text_offset_y=0, size=15, border=""):
         Button(self.group, self.x + x, self.y + y, width, height, text, border, size, text_offset_x, text_offset_y)
 
+    def add_textfield(self, x, y, width, height, text, text_offset_x=0, text_offset_y=0, size=15, border=""):
+        TextField(self.group, self.x + x, self.y + y, width, height, text, border, size, text_offset_x, text_offset_y)
 
-class TextField(AreaRect):
-    def __init__(self, group, width, height, x, y, bg="#BFBECD"):
-        super().__init__(group, width, height, x, y, bg="#BFBECD")
-
-    def get_event(self, event):
-        if self.rect.collidepoint(event.pos):
-            print("text...")
 
 class Button(pygame.sprite.Sprite):
     def __init__(self, group, x, y, width, height, text, border, size, text_offset_x, text_offset_y):
@@ -112,6 +107,23 @@ class Button(pygame.sprite.Sprite):
         if self.rect.collidepoint(event.pos):
             self.boom()
             scene_init(self.text)
+            return "stop"
+
+
+class TextField(Button):
+    def __init__(self, group, x, y, width, height, text, border, size, text_offset_x, text_offset_y):
+        super().__init__(group, x, y, width, height, text, border, size, text_offset_x, text_offset_y)
+
+    def update(self):
+        global listen_text
+        if listen_text:
+            self.text = input_data
+            self.add_text(self.text, 5, 15)
+
+    def get_event(self, event):
+        global listen_text
+        if self.rect.collidepoint(event.pos):
+            listen_text = True
 
 
 def start_window():
@@ -129,7 +141,7 @@ def start_window():
     window_content = AreaRect(start_window_sprites, auth_header.width, auth_header.height * 4, auth_header.x,
                               auth_header.y + auth_header.height + 1, "#BFBECD")
     window_content.add_text("Введите имя вашего игрового профиля.", 10, 20, size=13)
-    window_content.add_button(auth_header.width // 4.5, 80, auth_header.width // 1.8, 50, "   ", 20, 10, border="#9A999F")
+    window_content.add_textfield(auth_header.width // 4.5, 80, auth_header.width // 1.8, 50, "   ", 20, 10, border="#9A999F")
     window_content.add_button(auth_header.width // 4.5 + 20, 170,
                               auth_header.width // 1.8 - 40, 35, "Начать игру", 20, 10, border="#9A999F")
 
@@ -252,11 +264,8 @@ def clear_win():
     game_process_window()
 
 
-def listen_input():
-    listen_text = True
 
 def scene_init(scene):
-    print("Loaded:", scene)
     scenes = {"Начать игру": menu_window,
               "Выбрать уровень": levels_window,
               "Главное меню": levels_window,
@@ -266,7 +275,6 @@ def scene_init(scene):
     buttons = {
         "Пауза": pause_modal,
         "Продолжить": clear_pause,
-        "   ": listen_input,
     }
     if scene in scenes:
         for group in groups:
@@ -278,6 +286,8 @@ def scene_init(scene):
 
 pygame.init()
 clock = pygame.time.Clock()
+listen_text = False
+input_data = ""
 current_scene = None # !!!!!!!!!!!!!!!!!!!!!!! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 screen = pygame.display.set_mode(size)
 running = True
@@ -299,11 +309,23 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if listen_text:
+                listen_text = False
+
         if event.type == pygame.MOUSEBUTTONUP:
+            print("clicked!")
             for group in groups:
                 for e in group:
-                    if e.__class__.__name__ == "Button":
-                        e.get_event(event)
+                    if e.__class__.__name__ in ["Button", "TextField"]:
+                        res = e.get_event(event)
+                        print(res)
+
+
+        if event.type == pygame.KEYDOWN:
+            if listen_text:
+                data = pygame.key.name(event.key)
+                input_data += data
 
     for group in groups:
         group.update()
