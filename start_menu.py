@@ -12,6 +12,8 @@ LEVELS_BUTTONS_WIDTH = 75
 LEVELS_BUTTONS_HEIGHT = 75
 BUTTON_BG = "#F5F5F5"
 BG_COLOR = "#9995BD"
+PLAYER = ""
+SCORE = 500
 
 
 def load_image(name, colorkey=None):
@@ -141,7 +143,8 @@ def start_window():
     window_content = AreaRect(start_window_sprites, auth_header.width, auth_header.height * 4, auth_header.x,
                               auth_header.y + auth_header.height + 1, "#BFBECD")
     window_content.add_text("Введите имя вашего игрового профиля.", 10, 20, size=13)
-    window_content.add_textfield(auth_header.width // 4.5, 80, auth_header.width // 1.8, 50, "   ", 20, 10, border="#9A999F")
+    window_content.add_textfield(auth_header.width // 4.5, 80, auth_header.width // 1.8, 50, "   ", 20, 10,
+                                 border="#9A999F")
     window_content.add_button(auth_header.width // 4.5 + 20, 170,
                               auth_header.width // 1.8 - 40, 35, "Начать игру", 20, 10, border="#9A999F")
 
@@ -170,7 +173,8 @@ def menu_window():
     score_width, score_height = 470, 40
     score_content = AreaRect(menu_window_sprites, score_width, score_height, WIDTH // 2 - score_width // 2,
                              window_content.y + window_content.height + 2, "#BFBECD")
-    score_content.add_text("Счёт игрока: 0", score_width // 4 + 15, 10, size=18)
+    score_content.add_text(f"Счёт: {SCORE}", score_width - 150, 10, size=18)
+    score_content.add_text(PLAYER, 30, 10, size=18)
 
 
 def levels_window():
@@ -202,7 +206,83 @@ def levels_window():
     score_width, score_height = 470, 40
     score_content = AreaRect(levels_window_sprites, score_width, score_height, WIDTH // 2 - score_width // 2,
                              window_content.y + window_content.height + 2, "#BFBECD")
-    score_content.add_text("Счёт игрока: 0", score_width // 4 + 15, 10, size=18)
+    score_content.add_text(f"Счёт: {SCORE}", score_width - 150, 10, size=18)
+    score_content.add_text(PLAYER, 30, 10, size=18)
+
+
+def titres_window():
+    screen.fill(pygame.Color(BG_COLOR))
+
+    cont_width, cont_height = 470, 550
+    window_content = AreaRect(titres_sprites, cont_width, cont_height, WIDTH // 2 - cont_width // 2,
+                              0, "#BFBECD")
+    title_width, title_height = 400, 80
+    title = Title(titres_sprites, title_width, title_height, WIDTH // 2 - title_width // 2, 1, bg="#CDCDD3",
+                  bg_border="#9A999F")
+    title.set_text("Мастер турелей", title.x // 7, title.y + 10)
+
+    title_menu_width, title_menu_height = 360, 80
+    title_menu = Title(titres_sprites, title_menu_width, title_menu_height, WIDTH // 2 - title_menu_width // 2,
+                       100, bg="#CDCDD3", bg_border="#9A999F")
+    title_menu.set_text("Создатели", title.x // 3, title.y + 20, size=30)
+    window_content.add_button(cont_width // 2 - LEVELS_BUTTONS_WIDTH * 1.7,
+                              500,
+                              (LEVELS_BUTTONS_WIDTH + 10) * 3, 35, "Назад в главное меню", 25, 10, border="#9A999F")
+    score_width, score_height = 470, 40
+    score_content = AreaRect(titres_sprites, score_width, score_height, WIDTH // 2 - score_width // 2,
+                             window_content.y + window_content.height + 2, "#BFBECD")
+    score_content.add_text(f"Счёт: {SCORE}", score_width - 150, 10, size=18)
+    score_content.add_text(PLAYER, 30, 10, size=18)
+
+
+def records_window():
+    screen.fill(pygame.Color(BG_COLOR))
+
+    cont_width, cont_height = 470, 550
+    window_content = AreaRect(records_sprites, cont_width, cont_height, WIDTH // 2 - cont_width // 2,
+                              0, "#BFBECD")
+    title_width, title_height = 400, 80
+    title = Title(records_sprites, title_width, title_height, WIDTH // 2 - title_width // 2, 1, bg="#CDCDD3",
+                  bg_border="#9A999F")
+    title.set_text("Мастер турелей", title.x // 7, title.y + 10)
+
+    title_menu_width, title_menu_height = 360, 80
+    title_menu = Title(records_sprites, title_menu_width, title_menu_height, WIDTH // 2 - title_menu_width // 2,
+                       100, bg="#CDCDD3", bg_border="#9A999F")
+    title_menu.set_text("Рекорды", title.x // 2, title.y + 20, size=30)
+    window_content.add_button(cont_width // 2 - LEVELS_BUTTONS_WIDTH * 1.7,
+                              500,
+                              (LEVELS_BUTTONS_WIDTH + 10) * 3, 35, "Назад в главное меню", 25, 10, border="#9A999F")
+    score_width, score_height = 470, 40
+    score_content = AreaRect(records_sprites, score_width, score_height, WIDTH // 2 - score_width // 2,
+                             window_content.y + window_content.height + 2, "#BFBECD")
+    score_content.add_text(f"Счёт: {SCORE}", score_width - 150, 10, size=18)
+    score_content.add_text(PLAYER, 30, 10, size=18)
+
+
+def learn_window():
+    screen.fill(pygame.Color(BG_COLOR))
+
+    cont_width, cont_height = 470, 550
+    window_content = AreaRect(learn_sprites, cont_width, cont_height, WIDTH // 2 - cont_width // 2,
+                              0, "#BFBECD")
+    title_width, title_height = 400, 80
+    title = Title(learn_sprites, title_width, title_height, WIDTH // 2 - title_width // 2, 1, bg="#CDCDD3",
+                  bg_border="#9A999F")
+    title.set_text("Мастер турелей", title.x // 7, title.y + 10)
+
+    title_menu_width, title_menu_height = 360, 80
+    title_menu = Title(learn_sprites, title_menu_width, title_menu_height, WIDTH // 2 - title_menu_width // 2,
+                       100, bg="#CDCDD3", bg_border="#9A999F")
+    title_menu.set_text("Руководство", title.x // 3, title.y + 20, size=30)
+    window_content.add_button(cont_width // 2 - LEVELS_BUTTONS_WIDTH * 1.7,
+                              500,
+                              (LEVELS_BUTTONS_WIDTH + 10) * 3, 35, "Назад в главное меню", 25, 10, border="#9A999F")
+    score_width, score_height = 470, 40
+    score_content = AreaRect(learn_sprites, score_width, score_height, WIDTH // 2 - score_width // 2,
+                             window_content.y + window_content.height + 2, "#BFBECD")
+    score_content.add_text(f"Счёт: {SCORE}", score_width - 150, 10, size=18)
+    score_content.add_text(PLAYER, 30, 10, size=18)
 
 
 def game_process_window():
@@ -264,13 +344,15 @@ def clear_win():
     game_process_window()
 
 
-
 def scene_init(scene):
     scenes = {"Начать игру": menu_window,
               "Выбрать уровень": levels_window,
               "Главное меню": levels_window,
               "Назад в главное меню": menu_window,
               "Уровень 1": game_process_window,
+              "Создатели": titres_window,
+              "Рекорды": records_window,
+              "Руководство": learn_window,
               }
     buttons = {
         "Пауза": pause_modal,
@@ -288,12 +370,14 @@ pygame.init()
 clock = pygame.time.Clock()
 listen_text = False
 input_data = ""
-current_scene = None # !!!!!!!!!!!!!!!!!!!!!!! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 screen = pygame.display.set_mode(size)
 running = True
 start_window_sprites = pygame.sprite.Group()
 menu_window_sprites = pygame.sprite.Group()
 levels_window_sprites = pygame.sprite.Group()
+titres_sprites = pygame.sprite.Group()
+records_sprites = pygame.sprite.Group()
+learn_sprites = pygame.sprite.Group()
 game_process_sprites = pygame.sprite.Group()
 pause_modal_sprites = pygame.sprite.Group()
 end_modal_sprites = pygame.sprite.Group()
@@ -303,7 +387,7 @@ start_window()
 # game_process_window()
 groups = [start_window_sprites, menu_window_sprites,
           levels_window_sprites, game_process_sprites, pause_modal_sprites,
-          end_modal_sprites]
+          end_modal_sprites, titres_sprites, records_sprites, learn_sprites]
 
 while running:
     for event in pygame.event.get():
@@ -311,16 +395,15 @@ while running:
             running = False
         if event.type == pygame.MOUSEBUTTONDOWN:
             if listen_text:
+                if input_data:
+                    PLAYER = input_data
                 listen_text = False
 
         if event.type == pygame.MOUSEBUTTONUP:
-            print("clicked!")
             for group in groups:
                 for e in group:
                     if e.__class__.__name__ in ["Button", "TextField"]:
                         res = e.get_event(event)
-                        print(res)
-
 
         if event.type == pygame.KEYDOWN:
             if listen_text:
