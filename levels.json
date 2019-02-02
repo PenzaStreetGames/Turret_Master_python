@@ -1,7 +1,7 @@
 {
   "turrets":
   {
-    "1": ["grenade_gun", "rocket_launcher"],
+    "1": ["grenade_gun", "rocket_launcher", "machine_gun"],
     "2": ["machine_gun", "heavy_turret", "laser_turret"],
     "3": ["rocket_launcher", "machine_gun", "spitfire"],
     "4": ["spitfire", "grenade_gun", "machine_gun"],
@@ -88,7 +88,42 @@
   },
   "explosion_size": [10, 100],
   "explosion_life": 0.2,
-  "enemy_speed": {},
-  "enemy_health": {},
-  "enemy_periods": {}
+  "enemy_speed":
+  {
+    "soldier": 4,
+    "robot": 3,
+    "tank": 2,
+    "heavy_soldier": 3,
+    "heavy_robot": 2,
+    "heavy_tank": 1
+  },
+  "enemy_health":
+  {
+    "soldier": 10,
+    "robot": 10,
+    "tank": 25,
+    "heavy_soldier": 20,
+    "heavy_robot": 20,
+    "heavy_tank": 40
+  },
+  "enemy_periods":
+  {
+    "soldier": 3,
+    "robot": 4,
+    "tank": 5,
+    "heavy_soldier": 4,
+    "heavy_robot": 5,
+    "heavy_tank": 6
+  },
+  "shell_damage":
+  {
+    "laser_turret": 1,
+    "machine_gun": 1,
+    "heavy_turret": 5,
+    "spitfire": 1,
+    "rocket_launcher": 0,
+    "grenade_gun": 0,
+    "explosion": 10
+  },
+  "enemy_scale": 3
 }

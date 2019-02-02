@@ -8,6 +8,7 @@ from SpriteGroup import SpriteGroup
 from Sprite import Sprite
 from Turret import Turret
 from TurretGenerator import TurretGenerator
+from EnemyGenerator import EnemyGenerator
 from Shell import Shell
 from GameController import GameController
 from Scale import Scale
@@ -55,7 +56,17 @@ textures = {"machine_gun": load_image("turrets/machine_gun.png"),
             "bullets": [load_image(f"scales/ammunition_bar/bullet{image}.png")
                         for image in range(6)],
             "label": load_image("label.png"),
-            "background": load_image("backgrounds/stage1.png")}
+            "background": load_image("backgrounds/stage1.png"),
+            "soldier": [load_image(f"enemies/soldier{i}.png")
+                        for i in range(2)],
+            "robot": [load_image(f"enemies/robot{i}.png") for i in range(2)],
+            "tank": [load_image(f"enemies/tank{i}.png") for i in range(3)],
+            "heavy_soldier": [load_image(f"enemies/heavy_soldier{i}.png")
+                              for i in range(2)],
+            "heavy_robot": [load_image(f"enemies/heavy_robot{i}.png")
+                            for i in range(2)],
+            "heavy_tank": [load_image(f"enemies/heavy_tank{i}.png")
+                           for i in range(3)]}
 
 with open("levels.json", "r", encoding="utf-8") as infile:
     levels = json.loads(infile.read())
@@ -63,6 +74,7 @@ with open("levels.json", "r", encoding="utf-8") as infile:
 game_controller = GameController(textures=textures, levels=levels,
                                  screen=screen)
 game_controller.set_turret_gen(TurretGenerator(game_controller))
+game_controller.set_enemy_gen(EnemyGenerator(game_controller))
 all_sprites = SpriteGroup()
 game_controller.initialization()
 
@@ -73,6 +85,7 @@ def render():
     screen.blit(background, [0, 0])
     game_controller.shells.draw(screen)
     game_controller.turret_gen.turrets.draw(screen)
+    game_controller.enemy_gen.enemies.draw(screen)
     game_controller.interface.draw(screen)
 
 

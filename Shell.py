@@ -37,15 +37,7 @@ class Shell(Sprite):
             turret_dis = math.sqrt((self.target[0] - self.rect.x) ** 2 +
                                    (self.target[1] - self.rect.y) ** 2)
             if turret_dis > self.pre_dis:
-                textures = self.game_controller.textures
-                Explosion(self.game_controller.shells,
-                          (self.rect.x, self.rect.y),
-                          [self.game_controller.levels["explosion_size"]
-                           [0]] * 2, textures["explosion"],
-                          game_controller=self.game_controller,
-                          rot=self.rotation)
-                shells = self.game_controller.shells
-                shells.remove(self)
+                self.boom()
             self.pre_dis = turret_dis
 
     def move(self):
@@ -53,3 +45,14 @@ class Shell(Sprite):
         self.rect.y += math.cos(math.radians(self.rotation)) * self.speed
         if self.speed > 0:
             self.speed += self.acceleration
+
+    def boom(self):
+        textures = self.game_controller.textures
+        Explosion(self.game_controller.shells,
+                  (self.rect.x, self.rect.y),
+                  [self.game_controller.levels["explosion_size"]
+                   [0]] * 2, textures["explosion"],
+                  game_controller=self.game_controller,
+                  rot=self.rotation)
+        shells = self.game_controller.shells
+        shells.remove(self)

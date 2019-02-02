@@ -32,7 +32,8 @@ class Scale(Sprite):
         index = 0 if index < 0 else index
         index = 0 if value == 0 else index
         self.set_image(self.images[int(index)], self.pos, self.size)
-        self.rotate()
+        if self.scale_type in ["ammunition", "turret_health"]:
+            self.rotate()
 
     def rotate(self):
         delta_x = math.sin(math.radians(self.target.rotation)) * self.radius
@@ -42,3 +43,6 @@ class Scale(Sprite):
         self.image = pygame.transform.rotate(self.reserve_image,
                                              self.target.rotation)
         self.rect = self.image.get_rect(center=self.rect.center)
+
+    def move(self):
+        self.rect.center = (self.target.rect.center[0], self.rect.center[1])
