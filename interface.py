@@ -324,15 +324,15 @@ def pause_modal():
     pause_window.add_rect(10, 10, cont_width - 20, 50, bg="#B7B7B5", border="#9A999F")
     pause_window.add_text("Пауза", cont_width // 3, 20, size=25)
     pause_window.add_button(50, 95, cont_width - 100, 45, "Продолжить", 15, 10, border="#9A999F", size=18)
-
     pause_window.add_button(50, 150, cont_width - 100, 45, "Главное меню", 15, 10, border="#9A999F", size=18)
 
 
-def end_modal():
+def end_modal(result):
+    text_results = {0: "Уровень провален", 1: "Уровень пройден"}
     cont_width, cont_height = 300, 250
     pause_window = AreaRect(end_modal_sprites, cont_width, cont_height, WIDTH // 2 - cont_width // 2, 130, "#A4A4A2")
     pause_window.add_rect(10, 10, cont_width - 20, 50, bg="#B7B7B5", border="#9A999F")
-    pause_window.add_text("Уровень пройден", cont_width // 6, 20, size=20)
+    pause_window.add_text(text_results[result], cont_width // 6, 20, size=20)
     pause_window.add_rect(50, 100, cont_width - 100, 50, bg="#B7B7B5", border="#9A999F")
     pause_window.add_text("Счёт: 0", cont_width // 3, 120)
     pause_window.add_button(50, 200, cont_width // 4, 35, "Рестарт", 5, 10, border="#9A999F", size=13)
@@ -353,7 +353,7 @@ def clear_win():
 def scene_init(scene):
     scenes = {"Начать игру": menu_window,
               "Выбрать уровень": levels_window,
-              "Главное меню": levels_window,
+              "Главное меню": menu_window,
               "Назад в главное меню": menu_window,
               "Уровень 1": game_process_window,
               "Создатели": titres_window,
