@@ -20,18 +20,16 @@ class Turret(Sprite):
         self.shells = self.max_shells
         if self.turret_type in ["machine_gun", "grenade_gun", "rocket_launcher",
                                 "heavy_turret"]:
-            self.scale = Scale(group=game_controller.interface,
-                               pos=[self.rect.centerx, self.rect.y - 20],
-                               size=[self.rect.width - 20, 16], turret=self,
-                               scale="ammunition",
-                               game_controller=self.game_controller)
+            scale = "ammunition"
         elif self.turret_type in ["laser_turret", "spitfire"]:
-            self.scale = Scale(group=game_controller.interface,
-                               pos=[self.rect.centerx, self.rect.y - 20],
-                               size=[self.rect.width - 20, 16], turret=self,
-                               scale="health",
-                               game_controller=self.game_controller)
+            scale = "turret_health"
+        self.scale = Scale(group=game_controller.interface,
+                           pos=[self.rect.centerx, self.rect.y - 20],
+                           size=[self.rect.width - 20, 16], target=self,
+                           scale=scale,
+                           game_controller=self.game_controller)
         self.work = True
+        self.active = True
         self.repairing = False
         self.repair_speed = levels["repairing_speed"][turret_type]
         self.pressed = False
@@ -42,18 +40,22 @@ class Turret(Sprite):
             if self.pressed and self.turret_type == "laser_turret":
                 self.press(event.pos)
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            if not self.work:
-                if self.rect.collidepoint(event.pos):
-                    self.repairing = True
+            if self.active:
+                if not self.work:
+                    if self.rect.collidepoint(event.pos):
+                        self.repairing = True
+                else:
+                    self.shot(event.pos)
+                self.pressed = True
             else:
-                self.shot(event.pos)
-            self.pressed = True
+                if self.rect.collidepoint(event.pos):
+                    turret_gen = self.game_controller.turret_gen
+                    turret_gen.change_turret(self)
         elif event.type == pygame.MOUSEBUTTONUP:
             self.pressed = False
 
-
     def rotate(self, x, y):
-        if self.work:
+        if self.work and self.active:
             x, y = x - self.rect.x, -(y - self.rect.y)
             try:
                 angle = math.degrees(math.atan(y / x))
@@ -70,49 +72,53 @@ class Turret(Sprite):
     def shot(self, pos):
         textures = self.game_controller.textures
         levels = self.game_controller.levels
-        if self.shells > 0 and self.work:
-            if self.shot_period == self.shot_frame:
-                shell_type = levels["turret_shells"][self.turret_type]
-                image = textures[shell_type]
-                shells = self.game_controller.shells
-                size = levels["shell_sizes"][self.turret_type]
-                grenade = Shell(shells, self.rect.center, size,
-                                game_controller=self.game_controller,
-                                image=image,
-                                rot=self.rotation + 90,
-                                turret_type=self.turret_type, target=pos)
-                self.shells -= 1
-                self.shot_frame = 0
-                self.scale.update()
+        if self.active:
+            if self.shells > 0 and self.work:
+                if self.shot_period == self.shot_frame:
+                    shell_type = levels["turret_shells"][self.turret_type]
+                    image = textures[shell_type]
+                    shells = self.game_controller.shells
+                    size = levels["shell_sizes"][self.turret_type]
+                    Shell(shells, self.rect.center, size,
+                          game_controller=self.game_controller,
+                          image=image,
+                          rot=self.rotation + 90,
+                          turret_type=self.turret_type, target=pos)
+                    self.shells -= 1
+                    self.shot_frame = 0
+                    self.scale.update()
+                else:
+                    self.shot_frame += 1
             else:
-                self.shot_frame += 1
-        else:
-            self.work = False
+                self.work = False
 
     def press(self, pos):
         textures = self.game_controller.textures
-        if self.shells > 0 and self.work:
-            if self.shot_period == self.shot_frame:
-                shells = self.game_controller.shells
-                if self.turret_type == "laser_turret":
-                    x1, y1 = self.rect.center
-                    x2, y2 = pos
-                    radius = int(math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2))
-                    if radius >= 500:
-                        radius = 500
-                    ray = Shell(shells, self.rect.center, [10, radius * 2],
-                                game_controller=self.game_controller,
-                                image=textures["laser_shell"],
-                                rot=self.rotation - 90,
-                                turrret_type=self.turret_type)
-                self.shells -= 1
-                self.scale.update()
+        if self.active:
+            if self.shells > 0 and self.work:
+                if self.shot_period == self.shot_frame:
+                    shells = self.game_controller.shells
+                    if self.turret_type == "laser_turret":
+                        x1, y1 = self.rect.center
+                        x2, y2 = pos
+                        radius = int(math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2))
+                        if radius >= 500:
+                            radius = 500
+                        Shell(shells, self.rect.center, [10, radius * 2],
+                              game_controller=self.game_controller,
+                              image=textures["laser_shell"],
+                              rot=self.rotation - 90,
+                              turrret_type=self.turret_type)
+                    self.shells -= 1
+                    self.scale.update()
+                else:
+                    self.shot_frame += 1
             else:
-                self.shot_frame += 1
-        else:
-            self.work = False
+                self.work = False
 
     def update(self):
+        active_type = self.game_controller.turret_gen.active_type
+        self.active = self.turret_type == active_type
         if self.repairing:
             self.repair()
         if (self.turret_type == "heavy_turret" and

@@ -65,7 +65,7 @@
     "laser_turret": 0,
     "spitfire": -0.15,
     "heavy_turret": 0,
-    "rocket_launcher": 0.1,
+    "rocket_launcher": 0.2,
     "grenade_gun": 0
   },
   "turret_shells":
@@ -87,5 +87,8 @@
     "rocket_launcher": [15, 30]
   },
   "explosion_size": [10, 100],
-  "explosion_life": 0.2
+  "explosion_life": 0.2,
+  "enemy_speed": {},
+  "enemy_health": {},
+  "enemy_periods": {}
 }
