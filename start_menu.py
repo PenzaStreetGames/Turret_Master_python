@@ -14,6 +14,8 @@ BUTTON_BG = "#F5F5F5"
 BG_COLOR = "#9995BD"
 PLAYER = ""
 SCORE = 500
+SCENES_TEXT = {"titres_window": "Эта страница о создателях...",
+               "records_window": "Эта страница о рекордах...", }
 
 
 def load_image(name, colorkey=None):
@@ -107,9 +109,9 @@ class Button(pygame.sprite.Sprite):
 
     def get_event(self, event):
         if self.rect.collidepoint(event.pos):
-            self.boom()
+            # self.boom()
             scene_init(self.text)
-            return "stop"
+            return True
 
 
 class TextField(Button):
@@ -225,12 +227,14 @@ def titres_window():
     title_menu = Title(titres_sprites, title_menu_width, title_menu_height, WIDTH // 2 - title_menu_width // 2,
                        100, bg="#CDCDD3", bg_border="#9A999F")
     title_menu.set_text("Создатели", title.x // 3, title.y + 20, size=30)
+    window_content.add_text(SCENES_TEXT["titres_window"], 50, 230, size=15)
     window_content.add_button(cont_width // 2 - LEVELS_BUTTONS_WIDTH * 1.7,
                               500,
                               (LEVELS_BUTTONS_WIDTH + 10) * 3, 35, "Назад в главное меню", 25, 10, border="#9A999F")
     score_width, score_height = 470, 40
     score_content = AreaRect(titres_sprites, score_width, score_height, WIDTH // 2 - score_width // 2,
                              window_content.y + window_content.height + 2, "#BFBECD")
+
     score_content.add_text(f"Счёт: {SCORE}", score_width - 150, 10, size=18)
     score_content.add_text(PLAYER, 30, 10, size=18)
 
@@ -250,6 +254,8 @@ def records_window():
     title_menu = Title(records_sprites, title_menu_width, title_menu_height, WIDTH // 2 - title_menu_width // 2,
                        100, bg="#CDCDD3", bg_border="#9A999F")
     title_menu.set_text("Рекорды", title.x // 2, title.y + 20, size=30)
+    window_content.add_text(SCENES_TEXT["records_window"], 50, 230, size=15)
+
     window_content.add_button(cont_width // 2 - LEVELS_BUTTONS_WIDTH * 1.7,
                               500,
                               (LEVELS_BUTTONS_WIDTH + 10) * 3, 35, "Назад в главное меню", 25, 10, border="#9A999F")
@@ -388,8 +394,8 @@ start_window()
 groups = [start_window_sprites, menu_window_sprites,
           levels_window_sprites, game_process_sprites, pause_modal_sprites,
           end_modal_sprites, titres_sprites, records_sprites, learn_sprites]
-
 while running:
+    visible = True
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -402,8 +408,11 @@ while running:
         if event.type == pygame.MOUSEBUTTONUP:
             for group in groups:
                 for e in group:
-                    if e.__class__.__name__ in ["Button", "TextField"]:
-                        res = e.get_event(event)
+                    if visible:
+                        if e.__class__.__name__ in ["Button", "TextField"]:
+                            res = e.get_event(event)
+                            if res:
+                                visible = False
 
         if event.type == pygame.KEYDOWN:
             if listen_text:
