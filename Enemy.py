@@ -28,25 +28,32 @@ class Enemy(Sprite):
         self.start_frame = self.game_controller.frames
         self.texture = 0
         self.size = size
+        self.pause = False
+        self.lose_pos = -20
 
     def update(self):
-        shells = self.game_controller.shells
-        sprites = pygame.sprite.spritecollide(self, shells, False)
-        levels = self.game_controller.levels
-        for shell in sprites:
-            if isinstance(shell, Shell):
-                if shell.turret_type in ["rocket_launcher", "grenade_gun"]:
-                    shell.boom()
-                self.health -= levels["shell_damage"][shell.turret_type]
-                if shell.turret_type in ["machine_gun", "heavy_turret"]:
-                    shells.remove(shell)
-            elif isinstance(shell, Explosion):
-                self.health -= levels["shell_damage"]["explosion"]
-        if self.health <= 0:
-            self.game_controller.enemy_gen.enemies.remove(self)
-            self.game_controller.interface.remove(self.scale)
-        self.animate()
-        self.scale.update()
+        self.pause = self.game_controller.pause
+        if not self.pause:
+            shells = self.game_controller.shells
+            sprites = pygame.sprite.spritecollide(self, shells, False)
+            levels = self.game_controller.levels
+            for shell in sprites:
+                if isinstance(shell, Shell):
+                    if shell.turret_type in ["rocket_launcher", "grenade_gun"]:
+                        shell.boom()
+                    self.health -= levels["shell_damage"][shell.turret_type]
+                    if shell.turret_type in ["machine_gun", "heavy_turret"]:
+                        shells.remove(shell)
+                elif isinstance(shell, Explosion):
+                    self.health -= levels["shell_damage"]["explosion"]
+            if self.health <= 0:
+                self.game_controller.enemy_gen.enemies.remove(self)
+                self.game_controller.interface.remove(self.scale)
+            self.animate()
+            self.scale.update()
+        if self.rect.centerx <= self.lose_pos:
+            self.game_controller.set_pause(True)
+            self.game_controller.set_win(False)
 
     def animate(self):
         frames = self.game_controller.frames

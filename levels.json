@@ -8,6 +8,15 @@
     "5": ["spitfire", "laser_turret", "heavy_turret"],
     "6": ["rocket_launcher", "spitfire", "grenade_gun"]
   },
+  "enemies":
+  {
+    "1": ["soldier", "robot"],
+    "2": ["soldier", "soldier", "robot", "heavy_soldier"],
+    "3": ["soldier", "robot", "robot", "heavy_soldier", "tank"],
+    "4": ["soldier", "soldier", "heavy_soldier", "heavy_robot", "tank"],
+    "5": ["soldier", "robot", "robot", "heavy_soldier", "heavy_robot", "heavy_tank"],
+    "6": ["heavy_soldier", "heavy_soldier", "heavy_robot", "heavy_tank"]
+  },
   "turret_positions":
   {
     "1": [100, 300],
@@ -44,7 +53,7 @@
   "shells_life":
   {
     "machine_gun": 2,
-    "laser_turret": 0.1,
+    "laser_turret": 0.08,
     "spitfire": 2,
     "heavy_turret": 2,
     "rocket_launcher": 2,
@@ -125,5 +134,14 @@
     "grenade_gun": 0,
     "explosion": 10
   },
-  "enemy_scale": 3
+  "enemy_scale": 3,
+  "enemy_number":
+  {
+    "1": 20,
+    "2": 25,
+    "3": 27,
+    "4": 30,
+    "5": 31,
+    "6": 32
+  }
 }

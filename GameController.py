@@ -12,6 +12,8 @@ class GameController:
         self.shells = SpriteGroup()
         self.interface = SpriteGroup()
         self.screen = screen
+        self.pause = False
+        self.win = None
 
     def update(self):
         self.shells.get_my_event("check_death")
@@ -28,3 +30,9 @@ class GameController:
     def initialization(self, level=1):
         self.turret_gen.generate_turrets(level)
         self.enemy_gen.generate_enemies(level)
+
+    def set_pause(self, value):
+        self.pause = value
+
+    def set_win(self, value):
+        self.win = value

@@ -76,7 +76,7 @@ game_controller = GameController(textures=textures, levels=levels,
 game_controller.set_turret_gen(TurretGenerator(game_controller))
 game_controller.set_enemy_gen(EnemyGenerator(game_controller))
 all_sprites = SpriteGroup()
-game_controller.initialization()
+game_controller.initialization(2)
 
 
 def render():

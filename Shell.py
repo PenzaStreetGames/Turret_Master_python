@@ -17,7 +17,7 @@ class Shell(Sprite):
         self.rotation = rot
         self.image = pygame.transform.rotate(self.image, rot)
         self.rect = self.image.get_rect(center=self.rect.center)
-        self.life = levels["shells_life"][turret_type] * FPS
+        self.life = int(levels["shells_life"][turret_type] * FPS)
         self.speed = levels["shells_speed"][turret_type] + \
                      random.random() * levels["shells_speed"][turret_type] * 0.1
         self.acceleration = levels["shells_acceleration"][turret_type]
