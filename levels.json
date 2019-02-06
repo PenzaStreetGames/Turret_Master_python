@@ -1,12 +1,21 @@
 {
   "turrets":
   {
-    "1": ["machine_gun"],
+    "1": ["grenade_gun", "rocket_launcher", "machine_gun"],
     "2": ["machine_gun", "heavy_turret", "laser_turret"],
     "3": ["rocket_launcher", "machine_gun", "spitfire"],
     "4": ["spitfire", "grenade_gun", "machine_gun"],
     "5": ["spitfire", "laser_turret", "heavy_turret"],
     "6": ["rocket_launcher", "spitfire", "grenade_gun"]
+  },
+  "enemies":
+  {
+    "1": ["soldier", "robot"],
+    "2": ["soldier", "soldier", "robot", "heavy_soldier"],
+    "3": ["soldier", "robot", "robot", "heavy_soldier", "tank"],
+    "4": ["soldier", "soldier", "heavy_soldier", "heavy_robot", "tank"],
+    "5": ["soldier", "robot", "robot", "heavy_soldier", "heavy_robot", "heavy_tank"],
+    "6": ["heavy_soldier", "heavy_soldier", "heavy_robot", "heavy_tank"]
   },
   "turret_positions":
   {
@@ -21,6 +30,118 @@
     "grenade_gun": 12,
     "heavy_turret": 10,
     "spitfire": 100,
-    "laser_turret": 100
+    "laser_turret": 500
+  },
+  "shot_periods":
+  {
+    "machine_gun": 2,
+    "laser_turret": 1,
+    "spitfire": 2,
+    "rocket_launcher": 30,
+    "heavy_turret": 30,
+    "grenade_gun": 30
+  },
+  "repairing_speed":
+  {
+    "laser_turret": 5,
+    "machine_gun": 1,
+    "spitfire": 1,
+    "heavy_turret": 0.5,
+    "rocket_launcher": 0.5,
+    "grenade_gun": 0.5
+  },
+  "shells_life":
+  {
+    "machine_gun": 2,
+    "laser_turret": 0.08,
+    "spitfire": 2,
+    "heavy_turret": 2,
+    "rocket_launcher": 2,
+    "grenade_gun": 2
+  },
+  "shells_speed":
+  {
+    "machine_gun": 40,
+    "laser_turret": 0,
+    "spitfire": 10,
+    "heavy_turret": 30,
+    "rocket_launcher": 10,
+    "grenade_gun": 20
+  },
+  "shells_acceleration":
+  {
+    "machine_gun": 0,
+    "laser_turret": 0,
+    "spitfire": -0.15,
+    "heavy_turret": 0,
+    "rocket_launcher": 0.2,
+    "grenade_gun": 0
+  },
+  "turret_shells":
+  {
+    "laser_turret": "laser_shell",
+    "machine_gun": "bullet",
+    "heavy_turret": "heavy_shell",
+    "spitfire": "fire_clot",
+    "rocket_launcher": "rocket",
+    "grenade_gun": "grenade"
+  },
+  "shell_sizes":
+  {
+    "laser_turret": [10, 20],
+    "machine_gun": [12, 18],
+    "heavy_turret": [16, 18],
+    "spitfire": [28, 28],
+    "grenade_gun": [20, 24],
+    "rocket_launcher": [15, 30]
+  },
+  "explosion_size": [10, 100],
+  "explosion_life": 0.2,
+  "enemy_speed":
+  {
+    "soldier": 4,
+    "robot": 3,
+    "tank": 2,
+    "heavy_soldier": 3,
+    "heavy_robot": 2,
+    "heavy_tank": 1
+  },
+  "enemy_health":
+  {
+    "soldier": 10,
+    "robot": 10,
+    "tank": 25,
+    "heavy_soldier": 20,
+    "heavy_robot": 20,
+    "heavy_tank": 40
+  },
+  "enemy_periods":
+  {
+    "soldier": 3,
+    "robot": 4,
+    "tank": 5,
+    "heavy_soldier": 4,
+    "heavy_robot": 5,
+    "heavy_tank": 6
+  },
+  "shell_damage":
+  {
+    "laser_turret": 1,
+    "machine_gun": 1,
+    "heavy_turret": 5,
+    "spitfire": 1,
+    "rocket_launcher": 0,
+    "grenade_gun": 0,
+    "explosion": 10
+  },
+  "enemy_scale": 3,
+  "enemy_number":
+  {
+    "1": 20,
+    "2": 25,
+    "3": 27,
+    "4": 30,
+    "5": 31,
+    "6": 32
   }
 }
