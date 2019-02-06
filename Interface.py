@@ -1,11 +1,11 @@
 import pygame
 import os
 import constants
+from FileLoadManager import *
 import TurretMasterPython
 
 size = WIDTH, HEIGHT = (800, 600)
 v = 50  # пикселей в секунду
-fps = 40
 WINDOW_PADDING = 10
 BASE_BUTTONS_WIDTH = 250
 BASE_BUTTONS_HEIGHT = 45
@@ -15,8 +15,10 @@ BUTTON_BG = "#F5F5F5"
 BG_COLOR = "#9995BD"
 PLAYER = ""
 SCORE = 500
-SCENES_TEXT = {"titres_window": "Эта страница о создателях...",
-               "records_window": "Эта страница о рекордах...", }
+SCENES_TEXT = {
+    "titres_window": load_data_file("about.txt"),
+    "learn_window": load_data_file("howplay.txt"),
+    "records_window": load_json_file("records.json"), }
 
 
 def load_image(name, colorkey=None):
@@ -170,7 +172,6 @@ def start_window():
 
 
 def menu_window():
-
     screen.fill(pygame.Color(BG_COLOR))
 
     cont_width, cont_height = 470, 550
@@ -267,7 +268,9 @@ def titres_window():
                        WIDTH // 2 - title_menu_width // 2,
                        100, bg="#CDCDD3", bg_border="#9A999F")
     title_menu.set_text("Создатели", title.x // 3, title.y + 20, size=30)
-    window_content.add_text(SCENES_TEXT["titres_window"], 50, 230, size=15)
+    for i, row in enumerate(SCENES_TEXT["titres_window"]):
+        window_content.add_text(row, 60, 255 + 25 * i, size=15)
+
     window_content.add_button(cont_width // 2 - LEVELS_BUTTONS_WIDTH * 1.7,
                               500,
                               (LEVELS_BUTTONS_WIDTH + 10) * 3, 35,
@@ -300,7 +303,9 @@ def records_window():
                        WIDTH // 2 - title_menu_width // 2,
                        100, bg="#CDCDD3", bg_border="#9A999F")
     title_menu.set_text("Рекорды", title.x // 2, title.y + 20, size=30)
-    window_content.add_text(SCENES_TEXT["records_window"], 50, 230, size=15)
+    for i, row in enumerate(SCENES_TEXT["records_window"]):
+        window_content.add_rect(50, 250 + 45 * i, title_width, 40, bg="#CDCDD3", border="#9A999F")
+        window_content.add_text(row, 60, 255 + 45 * i, size=15)
 
     window_content.add_button(cont_width // 2 - LEVELS_BUTTONS_WIDTH * 1.7,
                               500,
@@ -333,6 +338,9 @@ def learn_window():
                        WIDTH // 2 - title_menu_width // 2,
                        100, bg="#CDCDD3", bg_border="#9A999F")
     title_menu.set_text("Руководство", title.x // 3, title.y + 20, size=30)
+    for i, row in enumerate(SCENES_TEXT["learn_window"]):
+        window_content.add_text(row, 60, 255 + 25 * i, size=15)
+
     window_content.add_button(cont_width // 2 - LEVELS_BUTTONS_WIDTH * 1.7,
                               500,
                               (LEVELS_BUTTONS_WIDTH + 10) * 3, 35,
@@ -481,7 +489,7 @@ start_window()
 groups = [start_window_sprites, menu_window_sprites,
           levels_window_sprites, game_process_sprites, pause_modal_sprites,
           end_modal_sprites, titres_sprites, records_sprites, learn_sprites]
-if __name__ == '__main__':
+if __name__ == '__main__' and False:
     while running:
         visible = True
         for event in pygame.event.get():
