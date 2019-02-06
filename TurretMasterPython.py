@@ -3,7 +3,7 @@ import os
 import math
 import random
 import json
-from constants import *
+import constants
 from SpriteGroup import SpriteGroup
 from Sprite import Sprite
 from Turret import Turret
@@ -12,6 +12,7 @@ from EnemyGenerator import EnemyGenerator
 from Shell import Shell
 from GameController import GameController
 from Scale import Scale
+import Interface
 
 
 def load_image(name, color_key=None):
@@ -76,38 +77,65 @@ game_controller = GameController(textures=textures, levels=levels,
 game_controller.set_turret_gen(TurretGenerator(game_controller))
 game_controller.set_enemy_gen(EnemyGenerator(game_controller))
 all_sprites = SpriteGroup()
-game_controller.initialization(2)
+# game_controller.initialization(2)
 
 
 def render():
     screen.fill(pygame.Color("black"))
-    background = pygame.transform.scale(textures["background"], screen_size)
-    screen.blit(background, [0, 0])
-    game_controller.shells.draw(screen)
-    game_controller.turret_gen.turrets.draw(screen)
-    game_controller.enemy_gen.enemies.draw(screen)
-    game_controller.interface.draw(screen)
+
+    if constants.game_process == "level":
+        background = pygame.transform.scale(textures["background"], screen_size)
+        screen.blit(background, [0, 0])
+        game_controller.shells.draw(screen)
+        game_controller.turret_gen.turrets.draw(screen)
+        game_controller.enemy_gen.enemies.draw(screen)
+        game_controller.interface.draw(screen)
+    elif constants.game_process == "start_menu":
+        screen.fill(pygame.Color(Interface.BG_COLOR))
+        Interface.start_window()
+
+    for group in Interface.groups:
+        group.update()
+        group.draw(screen)
 
 
 mouse_click = False
-running = True
-while running:
-    render()
-    turrets = game_controller.turret_gen.turrets
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-        elif event.type == pygame.MOUSEMOTION:
-            turrets.get_event(event)
-        elif event.type == pygame.MOUSEBUTTONDOWN:
-            mouse_click = event
-            turrets.get_event(event)
-        elif event.type == pygame.MOUSEBUTTONUP:
-            turrets.get_event(event)
-            mouse_click = False
-    if mouse_click:
-        turrets.get_event(mouse_click)
-    game_controller.update()
-    render()
-    clock.tick(FPS)
-    pygame.display.flip()
+player = ""
+if __name__ == '__main__':
+    while constants.running:
+        turrets = game_controller.turret_gen.turrets
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                constants.running = False
+            elif event.type == pygame.MOUSEMOTION:
+                turrets.get_event(event)
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_click = event
+                turrets.get_event(event)
+                if Interface.listen_text:
+                    if Interface.input_data:
+                        Interface.PLAYER = Interface.input_data
+                        player = Interface.input_data
+                    Interface.listen_text = False
+            elif event.type == pygame.MOUSEBUTTONUP:
+                turrets.get_event(event)
+                mouse_click = False
+                for group in Interface.groups:
+                    for e in group:
+                        if Interface.visible:
+                            if isinstance(e, (Interface.Button,
+                                              Interface.TextField)):
+                                res = e.get_event(event)
+                                if res:
+                                    Interface.visible = False
+            elif event.type == pygame.KEYDOWN:
+                if Interface.listen_text:
+                    data = pygame.key.name(event.key)
+                    Interface.input_data += data
+        if mouse_click:
+            turrets.get_event(mouse_click)
+        game_controller.update()
+        render()
+        Interface.visible = True
+        clock.tick(constants.FPS)
+        pygame.display.flip()
