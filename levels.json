@@ -143,5 +143,14 @@
     "4": 30,
     "5": 31,
     "6": 32
+  },
+  "enemy_points":
+  {
+    "soldier": 10,
+    "robot": 12,
+    "tank": 25,
+    "heavy_soldier": 15,
+    "heavy_robot": 18,
+    "heavy_tank": 30
   }
 }

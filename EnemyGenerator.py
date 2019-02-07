@@ -1,6 +1,7 @@
 from SpriteGroup import SpriteGroup
 from Enemy import Enemy
 from random import random, choice
+import constants
 
 
 class EnemyGenerator:
@@ -19,6 +20,7 @@ class EnemyGenerator:
         self.counter = 0
 
     def generate_enemies(self, level):
+        self.enemies = SpriteGroup()
         levels = self.game_controller.levels
         textures = self.game_controller.textures
         self.level_enemies = levels["enemies"][str(level)]
@@ -33,8 +35,9 @@ class EnemyGenerator:
                     self.create_enemy()
                     self.counter += 1
             elif len(self.enemies) == 0:
-                self.game_controller.set_pause(True)
-                self.game_controller.set_win(True)
+                if constants.game_process == "level":
+                    constants.pause = True
+                    self.game_controller.set_win(True)
         for enemy in self.enemies:
             enemy.update()
 
@@ -56,3 +59,6 @@ class EnemyGenerator:
 
     def choose_enemy(self):
         return choice(self.level_enemies)
+
+    def clear(self):
+        self.enemies = SpriteGroup()

@@ -3,6 +3,7 @@ from Sprite import Sprite
 from Scale import Scale
 from Shell import Shell
 from Explosion import Explosion
+import constants
 
 
 class Enemy(Sprite):
@@ -52,7 +53,7 @@ class Enemy(Sprite):
             self.animate()
             self.scale.update()
         if self.rect.centerx <= self.lose_pos:
-            self.game_controller.set_pause(True)
+            constants.pause = True
             self.game_controller.set_win(False)
 
     def animate(self):

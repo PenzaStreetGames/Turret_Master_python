@@ -206,6 +206,7 @@ def menu_window():
     score_content.add_text(PLAYER, 30, 10, size=18)
 
     constants.game_process = "start_menu"
+    constants.level_end = True
 
 
 def levels_window():
@@ -380,6 +381,8 @@ def game_process_window():
                                    175, cont_height // 8, bg="#009113",
                                    border="#9A999F")
     constants.game_process = "level"
+    constants.level_end = False
+    constants.pause = False
 
 
 def pause_modal():
@@ -393,6 +396,7 @@ def pause_modal():
                             border="#9A999F", size=18)
     pause_window.add_button(50, 150, cont_width - 100, 45, "Главное меню", 15,
                             10, border="#9A999F", size=18)
+    constants.pause = True
 
 
 def end_modal(result):
@@ -416,6 +420,7 @@ def end_modal(result):
 def clear_pause():
     pause_modal_sprites.empty()
     game_process_window()
+    constants.pause = False
 
 
 def clear_win():

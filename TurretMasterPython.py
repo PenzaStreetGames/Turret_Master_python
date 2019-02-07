@@ -10,9 +10,9 @@ from Turret import Turret
 from TurretGenerator import TurretGenerator
 from EnemyGenerator import EnemyGenerator
 from Shell import Shell
+import Interface
 from GameController import GameController
 from Scale import Scale
-import Interface
 
 
 def load_image(name, color_key=None):
@@ -30,7 +30,18 @@ def load_image(name, color_key=None):
     return image
 
 
+def load_sound(name):
+    fullname = os.path.join('data/sounds', name)
+    try:
+        sound = pygame.mixer.Sound(fullname)
+    except pygame.error as message:
+        print('Не удаётся загрузить:', name)
+        raise SystemExit(message)
+    return sound
+
+
 pygame.init()
+pygame.mixer.init()
 screen_size = (800, 600)
 screen = pygame.display.set_mode(screen_size)
 pygame.display.set_caption("Turret Master Python")
@@ -69,14 +80,34 @@ textures = {"machine_gun": load_image("turrets/machine_gun.png"),
             "heavy_tank": [load_image(f"enemies/heavy_tank{i}.png")
                            for i in range(3)]}
 
+sounds = {"explosion": load_sound("turrets/Explosion.wav"),
+          "grenade_gun": load_sound("turrets/GrenadeLaunch.wav"),
+          "heavy_turret": load_sound("turrets/HeavyTurretShoot.wav"),
+          "laser_turret": load_sound("turrets/LaserTurretWork.wav"),
+          "machine_gun": load_sound("turrets/MachineGunShoot.wav"),
+          "rocket_launcher": load_sound("turrets/RocketLaunch.wav"),
+          "spitfire": load_sound("turrets/SpitfireShoot.wav"),
+          "recharge_start": load_sound("turrets/RechargeStart.wav"),
+          "recharge_finish": load_sound("turrets/RechargeFinish.wav"),
+          "robot": load_sound("enemies/RobotStep.wav"),
+          "soldier": load_sound("enemies/SoldierStep.wav"),
+          "tank": load_sound("enemies/TankMove.wav"),
+          "heavy_robot": load_sound("enemies/RobotStep.wav"),
+          "heavy_soldier": load_sound("enemies/SoldierStep.wav"),
+          "heavy_tank": load_sound("enemies/TankMove.wav"),
+          "click": load_sound("interface/Click.wav"),
+          "money": load_sound("interface/MoneyMove.wav")}
+
 with open("levels.json", "r", encoding="utf-8") as infile:
     levels = json.loads(infile.read())
 
 game_controller = GameController(textures=textures, levels=levels,
-                                 screen=screen)
+                                 sounds=sounds, screen=screen)
 game_controller.set_turret_gen(TurretGenerator(game_controller))
 game_controller.set_enemy_gen(EnemyGenerator(game_controller))
 all_sprites = SpriteGroup()
+pygame.mixer.music.load("data/sounds/Take_You_Home_Tonight.mp3")
+pygame.mixer.music.play(-1)
 # game_controller.initialization(2)
 
 
@@ -136,6 +167,8 @@ if __name__ == '__main__':
             game_controller.initialization(constants.target_level)
             constants.initialization = False
             game_controller.pause = False
+            pygame.mixer.music.load("data/sounds/Mountain_Jump.mp3")
+            pygame.mixer.music.play(-1)
         game_controller.update()
         render()
         Interface.visible = True

@@ -15,6 +15,7 @@ class Explosion(Sprite):
         self.image = pygame.transform.rotate(self.image, rot)
         self.rect = self.image.get_rect(center=self.rect.center)
         self.life = levels["explosion_life"] * FPS
+        game_controller.sounds["explosion"].play()
 
     def check_death(self):
         if self.game_controller.frames - self.start_frame == self.life:
