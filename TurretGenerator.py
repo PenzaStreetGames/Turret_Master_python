@@ -10,7 +10,6 @@ class TurretGenerator:
         self.active_type = ""
 
     def generate_turrets(self, level):
-        print("turrets")
         levels = self.game_controller.levels
         textures = self.game_controller.textures
         turret_list = levels["turrets"][str(level)]

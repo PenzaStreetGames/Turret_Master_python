@@ -30,7 +30,6 @@ class GameController:
     def initialization(self, level=1):
         self.turret_gen.generate_turrets(level)
         self.enemy_gen.generate_enemies(level)
-        print("init", level)
 
     def set_pause(self, value):
         self.pause = value

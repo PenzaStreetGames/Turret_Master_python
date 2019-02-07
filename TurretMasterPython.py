@@ -82,7 +82,6 @@ all_sprites = SpriteGroup()
 
 def render():
     screen.fill(pygame.Color("black"))
-
     if constants.game_process == "level":
         background = pygame.transform.scale(textures["background"], screen_size)
         screen.blit(background, [0, 0])
@@ -93,7 +92,6 @@ def render():
     elif constants.game_process == "start_menu":
         screen.fill(pygame.Color(Interface.BG_COLOR))
         Interface.start_window()
-
     for group in Interface.groups:
         group.update()
         group.draw(screen)
@@ -134,6 +132,10 @@ if __name__ == '__main__':
                     Interface.input_data += data
         if mouse_click:
             turrets.get_event(mouse_click)
+        if constants.initialization:
+            game_controller.initialization(constants.target_level)
+            constants.initialization = False
+            game_controller.pause = False
         game_controller.update()
         render()
         Interface.visible = True
