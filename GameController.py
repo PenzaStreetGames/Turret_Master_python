@@ -21,12 +21,13 @@ class GameController:
         self.score = 0
 
     def update(self):
-        if constants.level_end and constants.game_process == "level":
+        if constants.level_end:
             self.turret_gen.clear()
             self.enemy_gen.clear()
             constants.level_end = False
-            pygame.mixer.music.load("data/sounds/Take_You_Home_Tonight.mp3")
-            pygame.mixer.music.play(-1)
+            if constants.game_process == "level":
+                pygame.mixer.music.load("data/sounds/Take_You_Home_Tonight.mp3")
+                pygame.mixer.music.play(-1)
         self.shells.get_my_event("check_death")
         self.turret_gen.update()
         self.enemy_gen.update()

@@ -216,8 +216,9 @@ def menu_window():
     score_content.add_text(f"Счёт: {SCORE}", score_width - 150, 10, size=18)
     score_content.add_text(PLAYER, 30, 10, size=18)
 
-    constants.game_process = "start_menu"
     constants.level_end = True
+    TurretMasterPython.game_controller.update()
+    constants.game_process = "start_menu"
 
 
 def levels_window():
@@ -380,6 +381,7 @@ def game_process_window():
                                 size=35)
     window_content_top.add_button(window_content_top.width - 115, 15,
                                   100, 45, "Пауза", 25, 15, border="#9A999F")
+    update_indicator(0)
     constants.game_process = "level"
     constants.level_end = False
     constants.pause = False
@@ -462,6 +464,8 @@ def scene_init(scene):
     if islevel[0] == "Уровень":
         global CHOOSEN_LEVEL
         CHOOSEN_LEVEL = int(islevel[1])
+        constants.initialization = True
+        constants.target_level = int(islevel[1])
 
     scenes = {"Начать игру": menu_window,
               "Выбрать уровень": levels_window,
