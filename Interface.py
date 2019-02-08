@@ -385,6 +385,31 @@ def game_process_window():
     constants.pause = False
 
 
+def update_indicator(procent):
+    cont_width, cont_height = WIDTH, 80
+    window_content_bottom = AreaRect(game_process_sprites, cont_width,
+                                     cont_height, WIDTH // 2 - cont_width // 2,
+                                     HEIGHT - cont_height, "#A4A4A2")
+    window_content_bottom.add_rect(10, 10,
+                                   120, cont_height - 20, bg="#B7B7B5",
+                                   border="#9A999F")
+    window_content_bottom.add_text(f"Уровень {CHOOSEN_LEVEL}", 20, 30)
+
+    window_content_bottom.add_rect(cont_width - 130, 10,
+                                   120, cont_height - 20, bg="#B7B7B5",
+                                   border="#9A999F")
+    window_content_bottom.add_text(f"Счёт: {SCORE}", cont_width - 120, 30)
+
+    window_content_bottom.add_rect(cont_width - cont_width // 1.55, 10,
+                                   240, cont_height - 20, bg="#B7B7B5",
+                                   border="#9A999F")
+    window_content_bottom.add_text("Прогресс уровня",
+                                   cont_width - cont_width // 1.69, 15)
+    window_content_bottom.add_rect(cont_width - cont_width // 1.65, 50,
+                                   175 * procent, cont_height // 8, bg="#009113",
+                                   border="#9A999F")
+
+
 def pause_modal():
     cont_width, cont_height = 300, 250
     pause_window = AreaRect(pause_modal_sprites, cont_width, cont_height,
