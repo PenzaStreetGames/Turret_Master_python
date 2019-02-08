@@ -455,15 +455,14 @@ def clear_win():
 
 def exit_game():
     constants.running = False
+    print("inter", constants.running)
 
 
 def scene_init(scene):
     islevel = scene.split()
     if islevel[0] == "Уровень":
-        print(islevel)
-        constants.initialization = True
-        constants.target_level = int(islevel[1])
-    # TurretMasterPython.game_controller.initialization(level=int(islevel[1]))
+        global CHOOSEN_LEVEL
+        CHOOSEN_LEVEL = int(islevel[1])
 
     scenes = {"Начать игру": menu_window,
               "Выбрать уровень": levels_window,
