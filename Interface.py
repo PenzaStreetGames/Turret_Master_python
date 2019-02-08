@@ -455,7 +455,6 @@ def clear_win():
 
 def exit_game():
     constants.running = False
-    print("inter", constants.running)
 
 
 def scene_init(scene):
