@@ -21,7 +21,7 @@ class GameController:
         self.score = 0
 
     def update(self):
-        if constants.level_end:
+        if constants.level_end and constants.game_process == "level":
             self.turret_gen.clear()
             self.enemy_gen.clear()
             constants.level_end = False
