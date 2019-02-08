@@ -181,7 +181,7 @@ def start_window():
 
 
 def menu_window():
-
+    set_score()
     screen.fill(pygame.Color(BG_COLOR))
 
     cont_width, cont_height = 470, 550
