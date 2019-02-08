@@ -19,3 +19,10 @@ def load_data_file(name):
     with open(name, mode="r", encoding="utf-8") as file:
         text = file.read().split("\n")
     return text
+
+
+def formating(arr):
+    if not arr:
+        return ""
+    text = ["    ".join([row[0].ljust(22, " "), str(row[1])]) for row in arr]
+    return text

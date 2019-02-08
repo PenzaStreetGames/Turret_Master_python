@@ -90,6 +90,7 @@ def render():
         game_controller.turret_gen.turrets.draw(screen)
         game_controller.enemy_gen.enemies.draw(screen)
         game_controller.interface.draw(screen)
+        Interface.update_indicator(0.34) # Обновление индикатора
     elif constants.game_process == "start_menu":
         screen.fill(pygame.Color(Interface.BG_COLOR))
         Interface.start_window()
