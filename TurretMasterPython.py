@@ -160,7 +160,10 @@ if __name__ == '__main__':
             elif event.type == pygame.KEYDOWN:
                 if Interface.listen_text:
                     data = pygame.key.name(event.key)
-                    Interface.input_data += data
+                    if data == "backspace":
+                        Interface.input_data = Interface.input_data[:-1]
+                    elif len(data) == 1:
+                        Interface.input_data += data
         if mouse_click:
             turrets.get_event(mouse_click)
         if constants.initialization:
