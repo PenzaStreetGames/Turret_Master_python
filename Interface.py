@@ -1,11 +1,12 @@
 import pygame
 import os
 import constants
+from FileLoadManager import *
 import TurretMasterPython
 
 size = WIDTH, HEIGHT = (800, 600)
 v = 50  # пикселей в секунду
-fps = 40
+CHOOSEN_LEVEL = 1
 WINDOW_PADDING = 10
 BASE_BUTTONS_WIDTH = 250
 BASE_BUTTONS_HEIGHT = 45
@@ -14,9 +15,14 @@ LEVELS_BUTTONS_HEIGHT = 75
 BUTTON_BG = "#F5F5F5"
 BG_COLOR = "#9995BD"
 PLAYER = ""
+USERS = load_json_file("users.json", False)
 SCORE = 500
-SCENES_TEXT = {"titres_window": "Эта страница о создателях...",
-               "records_window": "Эта страница о рекордах...", }
+Records = [[name, data["score"]] for name, data in USERS.items()]
+Records.sort(key=lambda pair: pair[1])
+SCENES_TEXT = {
+    "titres_window": load_data_file("about.txt"),
+    "learn_window": load_data_file("howplay.txt"),
+    "records_window": formating(Records)}
 
 
 def load_image(name, colorkey=None):
@@ -27,6 +33,11 @@ def load_image(name, colorkey=None):
     except pygame.error as message:
         print('Cannot load image:', name)
         raise SystemExit(message)
+
+
+def set_score(data=False):
+    global SCORE
+    SCORE = data if data else USERS[PLAYER]["score"]
 
 
 def get_font(size, bold=False):
