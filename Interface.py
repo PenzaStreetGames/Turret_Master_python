@@ -241,8 +241,12 @@ def levels_window():
 
     buttons_data = [["Уровень 1", "Уровень 2", "Уровень 3"],
                     ["Уровень 4", "Уровень 5", "Уровень 6"]]
+    l = 0
     for i in range(len(buttons_data)):
         for j in range(len(buttons_data[i])):
+            l += 1
+            if l > USERS[PLAYER]["current_level"]:
+                break
             window_content.add_button(
                 (cont_width // 2 - LEVELS_BUTTONS_WIDTH * 1.7) + 90 * j,
                 (160 + LEVELS_BUTTONS_HEIGHT) + 90 * i,
@@ -279,7 +283,9 @@ def titres_window():
                        WIDTH // 2 - title_menu_width // 2,
                        100, bg="#CDCDD3", bg_border="#9A999F")
     title_menu.set_text("Создатели", title.x // 3, title.y + 20, size=30)
-    window_content.add_text(SCENES_TEXT["titres_window"], 50, 230, size=15)
+    for i, row in enumerate(SCENES_TEXT["titres_window"]):
+        window_content.add_text(row, 60, 255 + 25 * i, size=15)
+
     window_content.add_button(cont_width // 2 - LEVELS_BUTTONS_WIDTH * 1.7,
                               500,
                               (LEVELS_BUTTONS_WIDTH + 10) * 3, 35,
@@ -312,7 +318,9 @@ def records_window():
                        WIDTH // 2 - title_menu_width // 2,
                        100, bg="#CDCDD3", bg_border="#9A999F")
     title_menu.set_text("Рекорды", title.x // 2, title.y + 20, size=30)
-    window_content.add_text(SCENES_TEXT["records_window"], 50, 230, size=15)
+    for i, row in enumerate(SCENES_TEXT["records_window"]):
+        window_content.add_rect(50, 250 + 45 * i, title_width, 40, bg="#CDCDD3", border="#9A999F")
+        window_content.add_text(row, 60, 255 + 45 * i, size=15)
 
     window_content.add_button(cont_width // 2 - LEVELS_BUTTONS_WIDTH * 1.7,
                               500,
@@ -345,6 +353,9 @@ def learn_window():
                        WIDTH // 2 - title_menu_width // 2,
                        100, bg="#CDCDD3", bg_border="#9A999F")
     title_menu.set_text("Руководство", title.x // 3, title.y + 20, size=30)
+    for i, row in enumerate(SCENES_TEXT["learn_window"]):
+        window_content.add_text(row, 60, 255 + 25 * i, size=15)
+
     window_content.add_button(cont_width // 2 - LEVELS_BUTTONS_WIDTH * 1.7,
                               500,
                               (LEVELS_BUTTONS_WIDTH + 10) * 3, 35,
@@ -369,28 +380,6 @@ def game_process_window():
                                 size=35)
     window_content_top.add_button(window_content_top.width - 115, 15,
                                   100, 45, "Пауза", 25, 15, border="#9A999F")
-    window_content_bottom = AreaRect(game_process_sprites, cont_width,
-                                     cont_height, WIDTH // 2 - cont_width // 2,
-                                     HEIGHT - cont_height, "#A4A4A2")
-    window_content_bottom.add_rect(10, 10,
-                                   120, cont_height - 20, bg="#B7B7B5",
-                                   border="#9A999F")
-    window_content_bottom.add_text("Уровень 1", 20, 30)
-
-    window_content_bottom.add_rect(cont_width - 130, 10,
-                                   120, cont_height - 20, bg="#B7B7B5",
-                                   border="#9A999F")
-    window_content_bottom.add_text("Счёт: 0", cont_width - 120, 30)
-
-    window_content_bottom.add_rect(cont_width - cont_width // 1.55, 10,
-                                   240, cont_height - 20, bg="#B7B7B5",
-                                   border="#9A999F")
-    window_content_bottom.add_text("Прогресс уровня",
-                                   cont_width - cont_width // 1.69, 15)
-
-    window_content_bottom.add_rect(cont_width - cont_width // 1.65, 50,
-                                   175, cont_height // 8, bg="#009113",
-                                   border="#9A999F")
     constants.game_process = "level"
     constants.level_end = False
     constants.pause = False
