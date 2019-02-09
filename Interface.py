@@ -36,12 +36,21 @@ def load_image(name, colorkey=None):
 
 
 def set_score(data):
-    global SCORE, Records
-    USERS[PLAYER] = USERS.get(PLAYER, {"score": 0, "current_level": 1})
+    global SCORE
     SCORE = data
+
+
+def set_name():
+    USERS[PLAYER] = USERS.get(PLAYER, {"score": 0, "current_level": 1})
+    save_json_file(USERS)
+
+
+def update_records_lines():
+    global Records
     Records = [[name, data["score"]] for name, data in USERS.items()]
     Records.sort(key=lambda pair: pair[1], reverse=True)
     SCENES_TEXT["records_window"] = formating(Records)
+
 
 
 def get_font(size, bold=False):
@@ -146,15 +155,12 @@ class TextField(Button):
                          text_offset_x, text_offset_y)
 
     def update(self):
-        global listen_text
-        if listen_text:
-            self.text = input_data
+        if PLAYER:
+            self.text = PLAYER
             self.add_text(self.text, 5, 15)
 
     def get_event(self, event):
-        global listen_text
-        if self.rect.collidepoint(event.pos):
-            listen_text = True
+        pass
 
 
 def start_window():
@@ -185,6 +191,7 @@ def start_window():
 
 
 def menu_window():
+    set_name()
     screen.fill(pygame.Color(BG_COLOR))
 
     cont_width, cont_height = 470, 550
@@ -216,7 +223,7 @@ def menu_window():
                              WIDTH // 2 - score_width // 2,
                              window_content.y + window_content.height + 2,
                              "#BFBECD")
-    score_content.add_text(f"Счёт: {SCORE}", score_width - 150, 10, size=18)
+    score_content.add_text(f"Счёт: {USERS[PLAYER]['score']}", score_width - 150, 10, size=18)
     score_content.add_text(PLAYER, 30, 10, size=18)
 
     constants.level_end = True
@@ -265,7 +272,7 @@ def levels_window():
                              WIDTH // 2 - score_width // 2,
                              window_content.y + window_content.height + 2,
                              "#BFBECD")
-    score_content.add_text(f"Счёт: {SCORE}", score_width - 150, 10, size=18)
+    score_content.add_text(f"Счёт: {USERS[PLAYER]['score']}", score_width - 150, 10, size=18)
     score_content.add_text(PLAYER, 30, 10, size=18)
 
 
@@ -300,11 +307,12 @@ def titres_window():
                              window_content.y + window_content.height + 2,
                              "#BFBECD")
 
-    score_content.add_text(f"Счёт: {SCORE}", score_width - 150, 10, size=18)
+    score_content.add_text(f"Счёт: {USERS[PLAYER]['score']}", score_width - 150, 10, size=18)
     score_content.add_text(PLAYER, 30, 10, size=18)
 
 
 def records_window():
+    update_records_lines()
     screen.fill(pygame.Color(BG_COLOR))
 
     cont_width, cont_height = 470, 550
@@ -336,7 +344,7 @@ def records_window():
                              WIDTH // 2 - score_width // 2,
                              window_content.y + window_content.height + 2,
                              "#BFBECD")
-    score_content.add_text(f"Счёт: {SCORE}", score_width - 150, 10, size=18)
+    score_content.add_text(f"Счёт: {USERS[PLAYER]['score']}", score_width - 150, 10, size=18)
     score_content.add_text(PLAYER, 30, 10, size=18)
 
 
@@ -370,7 +378,7 @@ def learn_window():
                              WIDTH // 2 - score_width // 2,
                              window_content.y + window_content.height + 2,
                              "#BFBECD")
-    score_content.add_text(f"Счёт: {SCORE}", score_width - 150, 10, size=18)
+    score_content.add_text(f"Счёт: {USERS[PLAYER]['score']}", score_width - 150, 10, size=18)
     score_content.add_text(PLAYER, 30, 10, size=18)
 
 
@@ -506,7 +514,7 @@ def scene_init(scene):
 
 pygame.init()
 clock = pygame.time.Clock()
-listen_text = False
+listen_text = True
 input_data = ""
 screen = pygame.display.set_mode(size)
 start_window_sprites = pygame.sprite.Group()
@@ -527,34 +535,3 @@ groups = [start_window_sprites, menu_window_sprites,
           levels_window_sprites, game_process_sprites, pause_modal_sprites,
           end_modal_sprites, titres_sprites, records_sprites, learn_sprites,
           game_process_indicators]
-if __name__ == '__main__':
-    while running:
-        visible = True
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if listen_text:
-                    if input_data:
-                        PLAYER = input_data
-                    listen_text = False
-
-            if event.type == pygame.MOUSEBUTTONUP:
-                for group in groups:
-                    for e in group:
-                        if visible:
-                            if e.__class__.__name__ in ["Button", "TextField"]:
-                                res = e.get_event(event)
-                                if res:
-                                    visible = False
-
-            if event.type == pygame.KEYDOWN:
-                if listen_text:
-                    data = pygame.key.name(event.key)
-                    input_data += data
-
-        for group in groups:
-            group.update()
-            group.draw(screen)
-        clock.tick(constants.FPS)
-        pygame.display.flip()
