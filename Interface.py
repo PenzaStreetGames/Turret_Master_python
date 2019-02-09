@@ -181,6 +181,7 @@ def start_window():
 
 
 def menu_window():
+
     set_score()
     screen.fill(pygame.Color(BG_COLOR))
 
@@ -285,7 +286,7 @@ def titres_window():
                        100, bg="#CDCDD3", bg_border="#9A999F")
     title_menu.set_text("Создатели", title.x // 3, title.y + 20, size=30)
     for i, row in enumerate(SCENES_TEXT["titres_window"]):
-        window_content.add_text(row, 60, 255 + 25 * i, size=15)
+        window_content.add_text(row, 60, 225 + 30 * i, size=15)
 
     window_content.add_button(cont_width // 2 - LEVELS_BUTTONS_WIDTH * 1.7,
                               500,
@@ -355,7 +356,7 @@ def learn_window():
                        100, bg="#CDCDD3", bg_border="#9A999F")
     title_menu.set_text("Руководство", title.x // 3, title.y + 20, size=30)
     for i, row in enumerate(SCENES_TEXT["learn_window"]):
-        window_content.add_text(row, 60, 255 + 25 * i, size=15)
+        window_content.add_text(row, 20, 205 + 30 * i, size=15)
 
     window_content.add_button(cont_width // 2 - LEVELS_BUTTONS_WIDTH * 1.7,
                               500,
@@ -381,7 +382,6 @@ def game_process_window():
                                 size=35)
     window_content_top.add_button(window_content_top.width - 115, 15,
                                   100, 45, "Пауза", 25, 15, border="#9A999F")
-    update_indicator(0)
 
     constants.game_process = "level"
     constants.level_end = False
@@ -389,8 +389,11 @@ def game_process_window():
 
 
 def update_indicator(procent):
+    if not game_process_sprites:
+        return
+    game_process_indicators.empty()
     cont_width, cont_height = WIDTH, 80
-    window_content_bottom = AreaRect(game_process_sprites, cont_width,
+    window_content_bottom = AreaRect(game_process_indicators, cont_width,
                                      cont_height, WIDTH // 2 - cont_width // 2,
                                      HEIGHT - cont_height, "#A4A4A2")
     window_content_bottom.add_rect(10, 10,
@@ -411,6 +414,8 @@ def update_indicator(procent):
     window_content_bottom.add_rect(cont_width - cont_width // 1.65, 50,
                                    int(175 * procent), cont_height // 8, bg="#009113",
                                    border="#9A999F")
+    print("indicator", game_process_indicators)
+
 
 
 def pause_modal():
@@ -428,6 +433,8 @@ def pause_modal():
 
 
 def end_modal(result):
+    if not game_process_sprites:
+        return
     text_results = {0: "Уровень провален", 1: "Уровень пройден"}
     cont_width, cont_height = 300, 250
     pause_window = AreaRect(end_modal_sprites, cont_width, cont_height,
@@ -509,13 +516,15 @@ learn_sprites = pygame.sprite.Group()
 game_process_sprites = pygame.sprite.Group()
 pause_modal_sprites = pygame.sprite.Group()
 end_modal_sprites = pygame.sprite.Group()
+game_process_indicators = pygame.sprite.Group()
 start_window()
 # menu_window()
 # levels_window()
 # game_process_window()
 groups = [start_window_sprites, menu_window_sprites,
           levels_window_sprites, game_process_sprites, pause_modal_sprites,
-          end_modal_sprites, titres_sprites, records_sprites, learn_sprites]
+          end_modal_sprites, titres_sprites, records_sprites, learn_sprites,
+          game_process_indicators]
 if __name__ == '__main__':
     while running:
         visible = True

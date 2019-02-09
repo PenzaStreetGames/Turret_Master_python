@@ -53,3 +53,4 @@ class GameController:
         self.win = value
         if self.win is not None:
             Interface.end_modal(value)
+

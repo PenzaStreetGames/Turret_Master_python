@@ -7,9 +7,10 @@ import constants
 
 
 class Enemy(Sprite):
-
+    """Класс врага"""
     def __init__(self, group, pos, size, enemy_type="soldier",
                  game_controller=None):
+        """Инициализация врага"""
         self.game_controller = game_controller
         self.textures = self.game_controller.textures[enemy_type]
         super().__init__(group, pos, size, image=self.textures[0],
@@ -33,6 +34,7 @@ class Enemy(Sprite):
         self.lose_pos = -20
 
     def update(self):
+        """Проверка столкновений со снарядами и жизнеспособности"""
         self.pause = self.game_controller.pause
         levels = self.game_controller.levels
         if not self.pause:
@@ -60,6 +62,7 @@ class Enemy(Sprite):
             self.game_controller.set_win(False)
 
     def animate(self):
+        """Движение врага"""
         frames = self.game_controller.frames
         if (frames - self.start_frame) % self.move_period == 0:
             index = self.texture

@@ -6,7 +6,7 @@ import Interface
 
 
 class EnemyGenerator:
-
+    """Класс-контроллер врагов"""
     def __init__(self, game_controller):
         self.enemies = SpriteGroup()
         self.game_controller = game_controller
@@ -24,6 +24,7 @@ class EnemyGenerator:
         self.score = 0
 
     def generate_enemies(self, level):
+
         self.enemies = SpriteGroup()
         levels = self.game_controller.levels
         textures = self.game_controller.textures
@@ -33,6 +34,9 @@ class EnemyGenerator:
 
     def update(self):
         pause = self.game_controller.pause
+        if constants.game_process == "level":
+            Interface.update_indicator(self.progress / self.max_progress)
+            Interface.set_score(self.score)
         if not pause:
             if self.enemy_number != self.counter:
                 frame = self.game_controller.frames
@@ -46,9 +50,6 @@ class EnemyGenerator:
                     self.game_controller.set_win(True)
         for enemy in self.enemies:
             enemy.update()
-        if constants.game_process == "level":
-            Interface.update_indicator(self.progress / self.max_progress)
-            Interface.set_score(self.score)
 
     def create_enemy(self):
         levels = self.game_controller.levels
