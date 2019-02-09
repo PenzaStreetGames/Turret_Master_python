@@ -141,11 +141,7 @@ if __name__ == '__main__':
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_click = event
                 turrets.get_event(event)
-                if Interface.listen_text:
-                    if Interface.input_data:
-                        Interface.PLAYER = Interface.input_data
-                        player = Interface.input_data
-                    Interface.listen_text = False
+
             elif event.type == pygame.MOUSEBUTTONUP:
                 turrets.get_event(event)
                 mouse_click = False
@@ -161,9 +157,11 @@ if __name__ == '__main__':
                 if Interface.listen_text:
                     data = pygame.key.name(event.key)
                     if data == "backspace":
-                        Interface.input_data = Interface.input_data[:-1]
+                        Interface.PLAYER = Interface.PLAYER[:-1]
+                    if data == "return":
+                        Interface.scene_init("Начать игру")
                     elif len(data) == 1:
-                        Interface.input_data += data
+                        Interface.PLAYER += data
         if mouse_click:
             turrets.get_event(mouse_click)
         if constants.initialization:
@@ -178,3 +176,5 @@ if __name__ == '__main__':
         Interface.visible = True
         clock.tick(constants.FPS)
         pygame.display.flip()
+        player = Interface.PLAYER
+
