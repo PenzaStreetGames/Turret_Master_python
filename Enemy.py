@@ -3,12 +3,14 @@ from Sprite import Sprite
 from Scale import Scale
 from Shell import Shell
 from Explosion import Explosion
+import constants
 
 
 class Enemy(Sprite):
-
+    """Класс врага"""
     def __init__(self, group, pos, size, enemy_type="soldier",
                  game_controller=None):
+        """Инициализация врага"""
         self.game_controller = game_controller
         self.textures = self.game_controller.textures[enemy_type]
         super().__init__(group, pos, size, image=self.textures[0],
@@ -32,11 +34,12 @@ class Enemy(Sprite):
         self.lose_pos = -20
 
     def update(self):
+        """Проверка столкновений со снарядами и жизнеспособности"""
         self.pause = self.game_controller.pause
+        levels = self.game_controller.levels
         if not self.pause:
             shells = self.game_controller.shells
             sprites = pygame.sprite.spritecollide(self, shells, False)
-            levels = self.game_controller.levels
             for shell in sprites:
                 if isinstance(shell, Shell):
                     if shell.turret_type in ["rocket_launcher", "grenade_gun"]:
@@ -47,15 +50,19 @@ class Enemy(Sprite):
                 elif isinstance(shell, Explosion):
                     self.health -= levels["shell_damage"]["explosion"]
             if self.health <= 0:
-                self.game_controller.enemy_gen.enemies.remove(self)
+                self.game_controller.enemy_gen.score += levels["enemy_points"][
+                                                                self.enemy_type]
+                self.game_controller.enemy_gen.progress += 1
                 self.game_controller.interface.remove(self.scale)
+                self.game_controller.enemy_gen.enemies.remove(self)
             self.animate()
             self.scale.update()
         if self.rect.centerx <= self.lose_pos:
-            self.game_controller.set_pause(True)
+            constants.pause = True
             self.game_controller.set_win(False)
 
     def animate(self):
+        """Движение врага"""
         frames = self.game_controller.frames
         if (frames - self.start_frame) % self.move_period == 0:
             index = self.texture

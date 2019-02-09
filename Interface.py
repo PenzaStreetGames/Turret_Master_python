@@ -16,9 +16,9 @@ BUTTON_BG = "#F5F5F5"
 BG_COLOR = "#9995BD"
 PLAYER = ""
 USERS = load_json_file("users.json", False)
-SCORE = 500
+SCORE = 0
 Records = [[name, data["score"]] for name, data in USERS.items()]
-Records.sort(key=lambda pair: pair[1])
+Records.sort(key=lambda pair: pair[1], reverse=True)
 SCENES_TEXT = {
     "titres_window": load_data_file("about.txt"),
     "learn_window": load_data_file("howplay.txt"),
@@ -35,12 +35,12 @@ def load_image(name, colorkey=None):
         raise SystemExit(message)
 
 
-def set_score(data=False):
+def set_score(data):
     global SCORE, Records
     USERS[PLAYER] = USERS.get(PLAYER, {"score": 0, "current_level": 1})
-    SCORE = data if data else USERS[PLAYER]["score"]
+    SCORE = data
     Records = [[name, data["score"]] for name, data in USERS.items()]
-    Records.sort(key=lambda pair: pair[1])
+    Records.sort(key=lambda pair: pair[1], reverse=True)
     SCENES_TEXT["records_window"] = formating(Records)
 
 
@@ -185,7 +185,6 @@ def start_window():
 
 
 def menu_window():
-    set_score()
     screen.fill(pygame.Color(BG_COLOR))
 
     cont_width, cont_height = 470, 550
@@ -220,6 +219,8 @@ def menu_window():
     score_content.add_text(f"Счёт: {SCORE}", score_width - 150, 10, size=18)
     score_content.add_text(PLAYER, 30, 10, size=18)
 
+    constants.level_end = True
+    TurretMasterPython.game_controller.update()
     constants.game_process = "start_menu"
 
 
@@ -287,7 +288,7 @@ def titres_window():
                        100, bg="#CDCDD3", bg_border="#9A999F")
     title_menu.set_text("Создатели", title.x // 3, title.y + 20, size=30)
     for i, row in enumerate(SCENES_TEXT["titres_window"]):
-        window_content.add_text(row, 60, 255 + 25 * i, size=15)
+        window_content.add_text(row, 60, 225 + 30 * i, size=15)
 
     window_content.add_button(cont_width // 2 - LEVELS_BUTTONS_WIDTH * 1.7,
                               500,
@@ -321,8 +322,9 @@ def records_window():
                        WIDTH // 2 - title_menu_width // 2,
                        100, bg="#CDCDD3", bg_border="#9A999F")
     title_menu.set_text("Рекорды", title.x // 2, title.y + 20, size=30)
-    for i, row in enumerate(SCENES_TEXT["records_window"]):
-        window_content.add_rect(50, 250 + 45 * i, title_width, 40, bg="#CDCDD3", border="#9A999F")
+    for i, row in enumerate(SCENES_TEXT["records_window"][:5]):
+        window_content.add_rect(50, 250 + 45 * i, title_width, 40, bg="#CDCDD3",
+                                border="#9A999F")
         window_content.add_text(row, 60, 255 + 45 * i, size=15)
 
     window_content.add_button(cont_width // 2 - LEVELS_BUTTONS_WIDTH * 1.7,
@@ -357,7 +359,7 @@ def learn_window():
                        100, bg="#CDCDD3", bg_border="#9A999F")
     title_menu.set_text("Руководство", title.x // 3, title.y + 20, size=30)
     for i, row in enumerate(SCENES_TEXT["learn_window"]):
-        window_content.add_text(row, 60, 255 + 25 * i, size=15)
+        window_content.add_text(row, 20, 205 + 30 * i, size=15)
 
     window_content.add_button(cont_width // 2 - LEVELS_BUTTONS_WIDTH * 1.7,
                               500,
@@ -385,11 +387,16 @@ def game_process_window():
                                   100, 45, "Пауза", 25, 15, border="#9A999F")
 
     constants.game_process = "level"
+    constants.level_end = False
+    constants.pause = False
 
 
 def update_indicator(procent):
+    if not game_process_sprites:
+        return
+    game_process_indicators.empty()
     cont_width, cont_height = WIDTH, 80
-    window_content_bottom = AreaRect(game_process_sprites, cont_width,
+    window_content_bottom = AreaRect(game_process_indicators, cont_width,
                                      cont_height, WIDTH // 2 - cont_width // 2,
                                      HEIGHT - cont_height, "#A4A4A2")
     window_content_bottom.add_rect(10, 10,
@@ -408,7 +415,8 @@ def update_indicator(procent):
     window_content_bottom.add_text("Прогресс уровня",
                                    cont_width - cont_width // 1.69, 15)
     window_content_bottom.add_rect(cont_width - cont_width // 1.65, 50,
-                                   175 * procent, cont_height // 8, bg="#009113",
+                                   int(175 * procent), cont_height // 8,
+                                   bg="#009113",
                                    border="#9A999F")
 
 
@@ -423,9 +431,12 @@ def pause_modal():
                             border="#9A999F", size=18)
     pause_window.add_button(50, 150, cont_width - 100, 45, "Главное меню", 15,
                             10, border="#9A999F", size=18)
+    constants.pause = True
 
 
 def end_modal(result):
+    if not game_process_sprites:
+        return
     text_results = {0: "Уровень провален", 1: "Уровень пройден"}
     cont_width, cont_height = 300, 250
     pause_window = AreaRect(end_modal_sprites, cont_width, cont_height,
@@ -435,7 +446,7 @@ def end_modal(result):
     pause_window.add_text(text_results[result], cont_width // 6, 20, size=20)
     pause_window.add_rect(50, 100, cont_width - 100, 50, bg="#B7B7B5",
                           border="#9A999F")
-    pause_window.add_text("Счёт: 0", cont_width // 3, 120)
+    pause_window.add_text(f"Счёт: {SCORE}", cont_width // 3, 120)
     pause_window.add_button(50, 200, cont_width // 4, 35, "Рестарт", 5, 10,
                             border="#9A999F", size=13)
 
@@ -446,6 +457,7 @@ def end_modal(result):
 def clear_pause():
     pause_modal_sprites.empty()
     game_process_window()
+    constants.pause = False
 
 
 def clear_win():
@@ -455,7 +467,6 @@ def clear_win():
 
 def exit_game():
     constants.running = False
-    print("inter", constants.running)
 
 
 def scene_init(scene):
@@ -463,7 +474,8 @@ def scene_init(scene):
     if islevel[0] == "Уровень":
         global CHOOSEN_LEVEL
         CHOOSEN_LEVEL = int(islevel[1])
-        TurretMasterPython.game_controller.initialization(level=int(islevel[1]))
+        constants.initialization = True
+        constants.target_level = int(islevel[1])
 
     scenes = {"Начать игру": menu_window,
               "Выбрать уровень": levels_window,
@@ -506,14 +518,16 @@ learn_sprites = pygame.sprite.Group()
 game_process_sprites = pygame.sprite.Group()
 pause_modal_sprites = pygame.sprite.Group()
 end_modal_sprites = pygame.sprite.Group()
+game_process_indicators = pygame.sprite.Group()
 start_window()
 # menu_window()
 # levels_window()
 # game_process_window()
 groups = [start_window_sprites, menu_window_sprites,
           levels_window_sprites, game_process_sprites, pause_modal_sprites,
-          end_modal_sprites, titres_sprites, records_sprites, learn_sprites]
-if __name__ == '__main__' and False:
+          end_modal_sprites, titres_sprites, records_sprites, learn_sprites,
+          game_process_indicators]
+if __name__ == '__main__':
     while running:
         visible = True
         for event in pygame.event.get():

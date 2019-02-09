@@ -10,8 +10,8 @@ def load_json_file(name, formating=True):
     return data_file
 
 
-def save_json_file(name, arg):
-    with open(name, mode="w", encoding="utf-8") as file:
+def save_json_file(arg):
+    with open("users.json", mode="w", encoding="utf-8") as file:
         file.write(json.dumps(arg))
 
 

@@ -76,6 +76,7 @@ class Turret(Sprite):
 
     def shot(self, pos):
         textures = self.game_controller.textures
+        sounds = self.game_controller.sounds
         levels = self.game_controller.levels
         if self.active and not self.pause:
             if self.shells > 0 and self.work:
@@ -92,6 +93,7 @@ class Turret(Sprite):
                     self.shells -= 1
                     self.shot_frame = 0
                     self.scale.update()
+                    sounds[self.turret_type].play()
                 else:
                     self.shot_frame += 1
             else:
