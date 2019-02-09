@@ -18,7 +18,8 @@ PLAYER = ""
 USERS = load_json_file("users.json", False)
 SCORE = 500
 Records = [[name, data["score"]] for name, data in USERS.items()]
-Records.sort(key=lambda pair: pair[1])
+Records.sort(key=lambda pair: pair[1], reverse=True)
+print(Records)
 SCENES_TEXT = {
     "titres_window": load_data_file("about.txt"),
     "learn_window": load_data_file("howplay.txt"),
@@ -36,8 +37,13 @@ def load_image(name, colorkey=None):
 
 
 def set_score(data=False):
-    global SCORE
+    global SCORE, Records
+    USERS[PLAYER] = USERS.get(PLAYER, {"score": 0, "current_level": 1})
     SCORE = data if data else USERS[PLAYER]["score"]
+    Records = [[name, data["score"]] for name, data in USERS.items()]
+    Records.sort(key=lambda pair: pair[1], reverse=True)
+    SCENES_TEXT["records_window"] = formating(Records)
+
 
 
 def get_font(size, bold=False):
@@ -320,8 +326,9 @@ def records_window():
                        WIDTH // 2 - title_menu_width // 2,
                        100, bg="#CDCDD3", bg_border="#9A999F")
     title_menu.set_text("Рекорды", title.x // 2, title.y + 20, size=30)
-    for i, row in enumerate(SCENES_TEXT["records_window"]):
-        window_content.add_rect(50, 250 + 45 * i, title_width, 40, bg="#CDCDD3", border="#9A999F")
+    for i, row in enumerate(SCENES_TEXT["records_window"][:5]):
+        window_content.add_rect(50, 250 + 45 * i, title_width, 40, bg="#CDCDD3",
+                                border="#9A999F")
         window_content.add_text(row, 60, 255 + 45 * i, size=15)
 
     window_content.add_button(cont_width // 2 - LEVELS_BUTTONS_WIDTH * 1.7,

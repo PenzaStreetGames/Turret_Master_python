@@ -47,6 +47,7 @@ class EnemyGenerator:
             elif len(self.enemies) == 0:
                 if constants.game_process == "level":
                     constants.pause = True
+                    self.game_controller.score = self.score
                     self.game_controller.set_win(True)
         for enemy in self.enemies:
             enemy.update()
