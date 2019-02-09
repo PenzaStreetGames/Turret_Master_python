@@ -64,7 +64,7 @@
     "machine_gun": 40,
     "laser_turret": 0,
     "spitfire": 10,
-    "heavy_turret": 30,
+    "heavy_turret": 50,
     "rocket_launcher": 10,
     "grenade_gun": 20
   },
@@ -99,12 +99,12 @@
   "explosion_life": 0.2,
   "enemy_speed":
   {
-    "soldier": 4,
+    "soldier": 3.5,
     "robot": 3,
-    "tank": 2,
+    "tank": 3,
     "heavy_soldier": 3,
-    "heavy_robot": 2,
-    "heavy_tank": 1
+    "heavy_robot": 3,
+    "heavy_tank": 3
   },
   "enemy_health":
   {
@@ -121,13 +121,13 @@
     "robot": 4,
     "tank": 5,
     "heavy_soldier": 4,
-    "heavy_robot": 5,
-    "heavy_tank": 6
+    "heavy_robot": 4,
+    "heavy_tank": 5
   },
   "shell_damage":
   {
-    "laser_turret": 1,
-    "machine_gun": 1,
+    "laser_turret": 0.4,
+    "machine_gun": 3,
     "heavy_turret": 5,
     "spitfire": 1,
     "rocket_launcher": 0,

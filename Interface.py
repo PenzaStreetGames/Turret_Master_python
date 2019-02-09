@@ -382,6 +382,7 @@ def game_process_window():
     window_content_top.add_button(window_content_top.width - 115, 15,
                                   100, 45, "Пауза", 25, 15, border="#9A999F")
     update_indicator(0)
+
     constants.game_process = "level"
     constants.level_end = False
     constants.pause = False
@@ -408,7 +409,7 @@ def update_indicator(procent):
     window_content_bottom.add_text("Прогресс уровня",
                                    cont_width - cont_width // 1.69, 15)
     window_content_bottom.add_rect(cont_width - cont_width // 1.65, 50,
-                                   175 * procent, cont_height // 8, bg="#009113",
+                                   int(175 * procent), cont_height // 8, bg="#009113",
                                    border="#9A999F")
 
 
@@ -436,7 +437,7 @@ def end_modal(result):
     pause_window.add_text(text_results[result], cont_width // 6, 20, size=20)
     pause_window.add_rect(50, 100, cont_width - 100, 50, bg="#B7B7B5",
                           border="#9A999F")
-    pause_window.add_text("Счёт: 0", cont_width // 3, 120)
+    pause_window.add_text(f"Счёт: {SCORE}", cont_width // 3, 120)
     pause_window.add_button(50, 200, cont_width // 4, 35, "Рестарт", 5, 10,
                             border="#9A999F", size=13)
 

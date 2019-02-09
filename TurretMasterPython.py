@@ -8,9 +8,9 @@ from SpriteGroup import SpriteGroup
 from Sprite import Sprite
 from Turret import Turret
 from TurretGenerator import TurretGenerator
-from EnemyGenerator import EnemyGenerator
 from Shell import Shell
 import Interface
+from EnemyGenerator import EnemyGenerator
 from GameController import GameController
 from Scale import Scale
 
