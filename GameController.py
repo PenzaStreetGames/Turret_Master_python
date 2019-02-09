@@ -50,14 +50,12 @@ class GameController:
         self.pause = value
 
     def set_win(self, value):
-        print("win")
         self.win = value
         if self.win is not None:
             Interface.end_modal(value)
         player = Interface.USERS[Interface.PLAYER]
-        print(player["current_level"], constants.target_level)
         if player["current_level"] <= constants.target_level:
-            Interface.USERS[Interface.PLAYER]["current_level"] = constants.target_level + 1
+            Interface.USERS[Interface.PLAYER][
+                "current_level"] = constants.target_level + 1
         Interface.USERS[Interface.PLAYER]["score"] += self.score
         FileLoadManager.save_json_file(Interface.USERS)
-

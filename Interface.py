@@ -45,7 +45,6 @@ def set_score(data=False):
     SCENES_TEXT["records_window"] = formating(Records)
 
 
-
 def get_font(size, bold=False):
     return pygame.font.Font(os.path.join("data", "fonts", 'PSG_Font.ttf'), size)
 
@@ -187,7 +186,6 @@ def start_window():
 
 
 def menu_window():
-
     set_score()
     screen.fill(pygame.Color(BG_COLOR))
 
@@ -419,10 +417,9 @@ def update_indicator(procent):
     window_content_bottom.add_text("Прогресс уровня",
                                    cont_width - cont_width // 1.69, 15)
     window_content_bottom.add_rect(cont_width - cont_width // 1.65, 50,
-                                   int(175 * procent), cont_height // 8, bg="#009113",
+                                   int(175 * procent), cont_height // 8,
+                                   bg="#009113",
                                    border="#9A999F")
-    print("indicator", game_process_indicators)
-
 
 
 def pause_modal():
