@@ -36,8 +36,12 @@ def load_image(name, colorkey=None):
 
 
 def set_score(data=False):
-    global SCORE
+    global SCORE, Records
+    USERS[PLAYER] = USERS.get(PLAYER, {"score": 0, "current_level": 1})
     SCORE = data if data else USERS[PLAYER]["score"]
+    Records = [[name, data["score"]] for name, data in USERS.items()]
+    Records.sort(key=lambda pair: pair[1])
+    SCENES_TEXT["records_window"] = formating(Records)
 
 
 def get_font(size, bold=False):

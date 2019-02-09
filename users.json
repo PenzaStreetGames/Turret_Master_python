@@ -1,6 +1,1 @@
-{
-  "user1": {
-    "score": 123,
-    "current_level": 1
-  }
-}
+{"user1": {"score": 123, "current_level": 1}, "asdf": {"score": 0, "current_level": 1}}
