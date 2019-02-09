@@ -24,8 +24,7 @@ class EnemyGenerator:
         self.score = 0
 
     def generate_enemies(self, level):
-
-        self.enemies = SpriteGroup()
+        self.__init__(game_controller=self.game_controller)
         levels = self.game_controller.levels
         textures = self.game_controller.textures
         self.level_enemies = levels["enemies"][str(level)]

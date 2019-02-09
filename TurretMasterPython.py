@@ -173,6 +173,7 @@ if __name__ == '__main__':
             pygame.mixer.music.load("data/sounds/Mountain_Jump.mp3")
             pygame.mixer.music.play(-1)
         game_controller.update()
+        print(game_controller.enemy_gen.score)
         render()
         Interface.visible = True
         clock.tick(constants.FPS)

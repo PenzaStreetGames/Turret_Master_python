@@ -16,10 +16,9 @@ BUTTON_BG = "#F5F5F5"
 BG_COLOR = "#9995BD"
 PLAYER = ""
 USERS = load_json_file("users.json", False)
-SCORE = 500
+SCORE = 0
 Records = [[name, data["score"]] for name, data in USERS.items()]
 Records.sort(key=lambda pair: pair[1], reverse=True)
-print(Records)
 SCENES_TEXT = {
     "titres_window": load_data_file("about.txt"),
     "learn_window": load_data_file("howplay.txt"),
@@ -36,10 +35,10 @@ def load_image(name, colorkey=None):
         raise SystemExit(message)
 
 
-def set_score(data=False):
+def set_score(data):
     global SCORE, Records
     USERS[PLAYER] = USERS.get(PLAYER, {"score": 0, "current_level": 1})
-    SCORE = data if data else USERS[PLAYER]["score"]
+    SCORE = data
     Records = [[name, data["score"]] for name, data in USERS.items()]
     Records.sort(key=lambda pair: pair[1], reverse=True)
     SCENES_TEXT["records_window"] = formating(Records)
@@ -186,7 +185,6 @@ def start_window():
 
 
 def menu_window():
-    set_score()
     screen.fill(pygame.Color(BG_COLOR))
 
     cont_width, cont_height = 470, 550

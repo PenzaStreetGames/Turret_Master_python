@@ -45,6 +45,7 @@ class GameController:
         self.interface = SpriteGroup()
         self.turret_gen.generate_turrets(level)
         self.enemy_gen.generate_enemies(level)
+        self.score = 0
 
     def set_pause(self, value):
         self.pause = value
