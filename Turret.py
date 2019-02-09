@@ -6,9 +6,11 @@ import math
 
 
 class Turret(Sprite):
+    """Класс турели"""
 
     def __init__(self, group, pos, size, turret_type="machine_gun", image=None,
                  game_controller=None):
+        """Инициализация турели"""
         super().__init__(group, pos, size, image=image,
                          game_controller=game_controller)
         levels = self.game_controller.levels
@@ -36,6 +38,7 @@ class Turret(Sprite):
         self.pause = False
 
     def get_event(self, event):
+        """Обработка управления"""
         if event.type == pygame.MOUSEMOTION:
             self.rotate(*event.pos)
             if self.pressed and self.turret_type == "laser_turret":
@@ -59,6 +62,7 @@ class Turret(Sprite):
             self.pressed = False
 
     def rotate(self, x, y):
+        """Поворот турели"""
         self.pause = self.game_controller.pause
         if self.work and self.active and not self.pause:
             x, y = x - self.rect.x, -(y - self.rect.y)
@@ -75,6 +79,7 @@ class Turret(Sprite):
             self.scale.rotate()
 
     def shot(self, pos):
+        """Выстрел турели"""
         textures = self.game_controller.textures
         sounds = self.game_controller.sounds
         levels = self.game_controller.levels
@@ -100,6 +105,7 @@ class Turret(Sprite):
                 self.work = False
 
     def press(self, pos):
+        """Стрельба лазерной турели"""
         textures = self.game_controller.textures
         if self.active and not self.pause:
             if self.shells > 0 and self.work:
@@ -124,6 +130,7 @@ class Turret(Sprite):
                 self.work = False
 
     def update(self):
+        """Проверка работоспособности турели"""
         active_type = self.game_controller.turret_gen.active_type
         self.active = self.turret_type == active_type
         self.pause = self.game_controller.pause
@@ -131,6 +138,7 @@ class Turret(Sprite):
             self.repair()
 
     def repair(self):
+        """Восстановление турели"""
         if self.shells < self.max_shells:
             self.shells += self.repair_speed
             self.scale.update()

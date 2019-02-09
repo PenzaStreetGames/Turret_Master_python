@@ -7,9 +7,11 @@ from Explosion import Explosion
 
 
 class Shell(Sprite):
+    """Объект снаряда"""
 
     def __init__(self, group, pos, size, image, game_controller=None,
                  rot=0, turret_type=None, target=None):
+        """Инициализация снаряда"""
         super().__init__(group, pos, size, image,
                          game_controller=game_controller)
         levels = self.game_controller.levels
@@ -27,6 +29,7 @@ class Shell(Sprite):
                                  (target[1] - self.rect.y) ** 2)
 
     def check_death(self):
+        """Проверка жизнеспособности снаряда"""
         if self.game_controller.frames - self.start_frame == self.life:
             shells = self.game_controller.shells
             shells.remove(self)
@@ -41,12 +44,14 @@ class Shell(Sprite):
             self.pre_dis = turret_dis
 
     def move(self):
+        """Движение снаряда"""
         self.rect.x += math.sin(math.radians(self.rotation)) * self.speed
         self.rect.y += math.cos(math.radians(self.rotation)) * self.speed
         if self.speed > 0:
             self.speed += self.acceleration
 
     def boom(self):
+        """Взрыв снаряда, если снаряд - разрывной"""
         textures = self.game_controller.textures
         Explosion(self.game_controller.shells,
                   (self.rect.x, self.rect.y),

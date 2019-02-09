@@ -8,6 +8,7 @@ import constants
 
 class Enemy(Sprite):
     """Класс врага"""
+
     def __init__(self, group, pos, size, enemy_type="soldier",
                  game_controller=None):
         """Инициализация врага"""
@@ -51,7 +52,7 @@ class Enemy(Sprite):
                     self.health -= levels["shell_damage"]["explosion"]
             if self.health <= 0:
                 self.game_controller.enemy_gen.score += levels["enemy_points"][
-                                                                self.enemy_type]
+                    self.enemy_type]
                 self.game_controller.enemy_gen.progress += 1
                 self.game_controller.interface.remove(self.scale)
                 self.game_controller.enemy_gen.enemies.remove(self)

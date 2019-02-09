@@ -16,6 +16,7 @@ from Scale import Scale
 
 
 def load_image(name, color_key=None):
+    """Загрузка изображения"""
     fullname = os.path.join('data', name)
     try:
         image = pygame.image.load(fullname)
@@ -31,6 +32,7 @@ def load_image(name, color_key=None):
 
 
 def load_sound(name):
+    """Загрузка звука"""
     fullname = os.path.join('data/sounds', name)
     try:
         sound = pygame.mixer.Sound(fullname)
@@ -108,10 +110,10 @@ game_controller.set_enemy_gen(EnemyGenerator(game_controller))
 all_sprites = SpriteGroup()
 pygame.mixer.music.load("data/sounds/Take_You_Home_Tonight.mp3")
 pygame.mixer.music.play(-1)
-# game_controller.initialization(2)
 
 
 def render():
+    """Отрисовка игры"""
     screen.fill(pygame.Color("black"))
     if constants.game_process == "level":
         background = pygame.transform.scale(textures["background"], screen_size)
@@ -173,7 +175,6 @@ if __name__ == '__main__':
             pygame.mixer.music.load("data/sounds/Mountain_Jump.mp3")
             pygame.mixer.music.play(-1)
         game_controller.update()
-        print(game_controller.enemy_gen.score)
         render()
         Interface.visible = True
         clock.tick(constants.FPS)

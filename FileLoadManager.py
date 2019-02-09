@@ -5,7 +5,8 @@ def load_json_file(name, formating=True):
     with open(name, mode="r", encoding="utf-8") as file:
         data_file = json.loads(file.read())
     if formating:
-        text = ["    ".join([row[0].ljust(22, " "), row[1]]) for row in data_file.items()]
+        text = ["    ".join([row[0].ljust(22, " "), row[1]]) for row in
+                data_file.items()]
         return text
     return data_file
 

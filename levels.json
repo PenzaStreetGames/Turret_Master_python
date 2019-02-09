@@ -134,7 +134,16 @@
     "grenade_gun": 0,
     "explosion": 10
   },
-  "enemy_scale": 3,
+  "enemy_scales":
+  {
+    "soldier": 3,
+    "robot": 3,
+    "tank": 4,
+    "heavy_soldier": 3,
+    "heavy_robot": 3,
+    "heavy_tank": 4
+
+  },
   "enemy_number":
   {
     "1": 20,

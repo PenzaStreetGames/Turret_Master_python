@@ -4,8 +4,10 @@ import math
 
 
 class Scale(Sprite):
+    """Объект шкалы"""
 
     def __init__(self, group, pos, size, target, scale, game_controller=None):
+        """Инициализация шкалы"""
         self.game_controller = game_controller
         textures = self.game_controller.textures
         if scale in ["turret_health", "enemy_health"]:
@@ -23,6 +25,7 @@ class Scale(Sprite):
             self.max_value = self.target.max_health
 
     def update(self):
+        """Обновление состояния индикатора"""
         if self.scale_type in ["ammunition", "turret_health"]:
             value = self.target.shells
         elif self.scale_type == "enemy_health":
@@ -36,6 +39,7 @@ class Scale(Sprite):
             self.rotate()
 
     def rotate(self):
+        """Поворот шкалы"""
         delta_x = math.sin(math.radians(self.target.rotation)) * self.radius
         delta_y = math.cos(math.radians(self.target.rotation)) * self.radius
         self.rect.center = (self.target.pos[0] + delta_x,
@@ -45,4 +49,5 @@ class Scale(Sprite):
         self.rect = self.image.get_rect(center=self.rect.center)
 
     def move(self):
+        """Движение шкалы"""
         self.rect.center = (self.target.rect.center[0], self.rect.center[1])
