@@ -6,6 +6,7 @@ import TurretMasterPython
 
 size = WIDTH, HEIGHT = (800, 600)
 v = 50  # пикселей в секунду
+CHOOSEN_LEVEL = 1
 WINDOW_PADDING = 10
 BASE_BUTTONS_WIDTH = 250
 BASE_BUTTONS_HEIGHT = 45
@@ -14,11 +15,14 @@ LEVELS_BUTTONS_HEIGHT = 75
 BUTTON_BG = "#F5F5F5"
 BG_COLOR = "#9995BD"
 PLAYER = ""
+USERS = load_json_file("users.json", False)
 SCORE = 500
+Records = [[name, data["score"]] for name, data in USERS.items()]
+Records.sort(key=lambda pair: pair[1])
 SCENES_TEXT = {
     "titres_window": load_data_file("about.txt"),
     "learn_window": load_data_file("howplay.txt"),
-    "records_window": load_json_file("records.json"), }
+    "records_window": formating(Records)}
 
 
 def load_image(name, colorkey=None):
@@ -29,6 +33,15 @@ def load_image(name, colorkey=None):
     except pygame.error as message:
         print('Cannot load image:', name)
         raise SystemExit(message)
+
+
+def set_score(data=False):
+    global SCORE, Records
+    USERS[PLAYER] = USERS.get(PLAYER, {"score": 0, "current_level": 1})
+    SCORE = data if data else USERS[PLAYER]["score"]
+    Records = [[name, data["score"]] for name, data in USERS.items()]
+    Records.sort(key=lambda pair: pair[1])
+    SCENES_TEXT["records_window"] = formating(Records)
 
 
 def get_font(size, bold=False):
@@ -172,6 +185,7 @@ def start_window():
 
 
 def menu_window():
+    set_score()
     screen.fill(pygame.Color(BG_COLOR))
 
     cont_width, cont_height = 470, 550
@@ -230,8 +244,12 @@ def levels_window():
 
     buttons_data = [["Уровень 1", "Уровень 2", "Уровень 3"],
                     ["Уровень 4", "Уровень 5", "Уровень 6"]]
+    l = 0
     for i in range(len(buttons_data)):
         for j in range(len(buttons_data[i])):
+            l += 1
+            if l > USERS[PLAYER]["current_level"]:
+                break
             window_content.add_button(
                 (cont_width // 2 - LEVELS_BUTTONS_WIDTH * 1.7) + 90 * j,
                 (160 + LEVELS_BUTTONS_HEIGHT) + 90 * i,
@@ -365,29 +383,33 @@ def game_process_window():
                                 size=35)
     window_content_top.add_button(window_content_top.width - 115, 15,
                                   100, 45, "Пауза", 25, 15, border="#9A999F")
+
+    constants.game_process = "level"
+
+
+def update_indicator(procent):
+    cont_width, cont_height = WIDTH, 80
     window_content_bottom = AreaRect(game_process_sprites, cont_width,
                                      cont_height, WIDTH // 2 - cont_width // 2,
                                      HEIGHT - cont_height, "#A4A4A2")
     window_content_bottom.add_rect(10, 10,
                                    120, cont_height - 20, bg="#B7B7B5",
                                    border="#9A999F")
-    window_content_bottom.add_text("Уровень 1", 20, 30)
+    window_content_bottom.add_text(f"Уровень {CHOOSEN_LEVEL}", 20, 30)
 
     window_content_bottom.add_rect(cont_width - 130, 10,
                                    120, cont_height - 20, bg="#B7B7B5",
                                    border="#9A999F")
-    window_content_bottom.add_text("Счёт: 0", cont_width - 120, 30)
+    window_content_bottom.add_text(f"Счёт: {SCORE}", cont_width - 120, 30)
 
     window_content_bottom.add_rect(cont_width - cont_width // 1.55, 10,
                                    240, cont_height - 20, bg="#B7B7B5",
                                    border="#9A999F")
     window_content_bottom.add_text("Прогресс уровня",
                                    cont_width - cont_width // 1.69, 15)
-
     window_content_bottom.add_rect(cont_width - cont_width // 1.65, 50,
-                                   175, cont_height // 8, bg="#009113",
+                                   175 * procent, cont_height // 8, bg="#009113",
                                    border="#9A999F")
-    constants.game_process = "level"
 
 
 def pause_modal():
@@ -439,6 +461,8 @@ def exit_game():
 def scene_init(scene):
     islevel = scene.split()
     if islevel[0] == "Уровень":
+        global CHOOSEN_LEVEL
+        CHOOSEN_LEVEL = int(islevel[1])
         TurretMasterPython.game_controller.initialization(level=int(islevel[1]))
 
     scenes = {"Начать игру": menu_window,
