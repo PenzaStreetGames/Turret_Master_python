@@ -6,17 +6,17 @@ import TurretMasterPython
 
 size = WIDTH, HEIGHT = (800, 600)
 v = 50  # пикселей в секунду
-CHOOSEN_LEVEL = 1
-WINDOW_PADDING = 10
+CHOOSEN_LEVEL = 1  # Выбранный уровень
+WINDOW_PADDING = 10  # Отступ окна
 BASE_BUTTONS_WIDTH = 250
 BASE_BUTTONS_HEIGHT = 45
 LEVELS_BUTTONS_WIDTH = 75
 LEVELS_BUTTONS_HEIGHT = 75
 BUTTON_BG = "#F5F5F5"
 BG_COLOR = "#9995BD"
-PLAYER = ""
-USERS = load_json_file("users.json", False)
-SCORE = 0
+PLAYER = ""  # Имя игрока
+USERS = load_json_file("users.json", False)  # Словарь пользователей
+SCORE = 0  # Внутриуровневый счет
 Records = [[name, data["score"]] for name, data in USERS.items()]
 Records.sort(key=lambda pair: pair[1], reverse=True)
 SCENES_TEXT = {
@@ -36,21 +36,23 @@ def load_image(name, colorkey=None):
 
 
 def set_score(data):
+    """ Установка внутриигрового счета """
     global SCORE
     SCORE = data
 
 
 def set_name():
+    """ Создание нового пользователя """
     USERS[PLAYER] = USERS.get(PLAYER, {"score": 0, "current_level": 1})
     save_json_file(USERS)
 
 
 def update_records_lines():
+    """ Обновление рекордов """
     global Records
     Records = [[name, data["score"]] for name, data in USERS.items()]
     Records.sort(key=lambda pair: pair[1], reverse=True)
     SCENES_TEXT["records_window"] = formating(Records)
-
 
 
 def get_font(size, bold=False):
@@ -58,6 +60,8 @@ def get_font(size, bold=False):
 
 
 class Title(pygame.sprite.Sprite):
+    """ Блок заголовка сцены """
+
     def __init__(self, group, width, height, x, y, bg='#BFBECD', bg_border=""):
         super().__init__(group)
         group.add(self)
@@ -78,6 +82,8 @@ class Title(pygame.sprite.Sprite):
 
 
 class AreaRect(pygame.sprite.Sprite):
+    """ Блок с содержимым на сцене """
+
     def __init__(self, group, width, height, x, y, bg="#BFBECD"):
         super().__init__(group)
         group.add(self)
@@ -114,6 +120,8 @@ class AreaRect(pygame.sprite.Sprite):
 
 
 class Button(pygame.sprite.Sprite):
+    """ Кнопка сцены """
+
     def __init__(self, group, x, y, width, height, text, border, size,
                  text_offset_x, text_offset_y):
         super().__init__(group)
@@ -149,6 +157,8 @@ class Button(pygame.sprite.Sprite):
 
 
 class TextField(Button):
+    """ Текстовое поле сцены """
+
     def __init__(self, group, x, y, width, height, text, border, size,
                  text_offset_x, text_offset_y):
         super().__init__(group, x, y, width, height, text, border, size,
@@ -164,6 +174,7 @@ class TextField(Button):
 
 
 def start_window():
+    """ Стартовый экран """
     screen.fill(pygame.Color(BG_COLOR))
 
     title_width, title_height = 400, 80
@@ -191,6 +202,9 @@ def start_window():
 
 
 def menu_window():
+    """ Экран главного меню """
+    if not PLAYER:
+        return scene_init("_Старт")
     set_name()
     screen.fill(pygame.Color(BG_COLOR))
 
@@ -232,6 +246,7 @@ def menu_window():
 
 
 def levels_window():
+    """ Экран выбора уровней """
     screen.fill(pygame.Color(BG_COLOR))
 
     cont_width, cont_height = 470, 550
@@ -277,6 +292,7 @@ def levels_window():
 
 
 def titres_window():
+    """ Сцена о создателях  """
     screen.fill(pygame.Color(BG_COLOR))
 
     cont_width, cont_height = 470, 550
@@ -312,6 +328,7 @@ def titres_window():
 
 
 def records_window():
+    """ Сцена рекордов """
     update_records_lines()
     screen.fill(pygame.Color(BG_COLOR))
 
@@ -349,6 +366,7 @@ def records_window():
 
 
 def learn_window():
+    """ Сцена о том, как играть """
     screen.fill(pygame.Color(BG_COLOR))
 
     cont_width, cont_height = 470, 550
@@ -383,6 +401,7 @@ def learn_window():
 
 
 def game_process_window():
+    """ Сам игровой процесс """
     screen.fill(pygame.Color("#5D5D5C"))
 
     cont_width, cont_height = WIDTH, 80
@@ -400,6 +419,7 @@ def game_process_window():
 
 
 def update_indicator(procent):
+    """ Внутрииговые индикаторы """
     if not game_process_sprites:
         return
     game_process_indicators.empty()
@@ -429,6 +449,7 @@ def update_indicator(procent):
 
 
 def pause_modal():
+    """ Окно паузы """
     cont_width, cont_height = 300, 250
     pause_window = AreaRect(pause_modal_sprites, cont_width, cont_height,
                             WIDTH // 2 - cont_width // 2, 130, "#A4A4A2")
@@ -443,6 +464,7 @@ def pause_modal():
 
 
 def end_modal(result):
+    """ Окно конца игры """
     if not game_process_sprites:
         return
     text_results = {0: "Уровень провален", 1: "Уровень пройден"}
@@ -455,29 +477,31 @@ def end_modal(result):
     pause_window.add_rect(50, 100, cont_width - 100, 50, bg="#B7B7B5",
                           border="#9A999F")
     pause_window.add_text(f"Счёт: {SCORE}", cont_width // 3, 120)
-    pause_window.add_button(50, 200, cont_width // 4, 35, "Рестарт", 5, 10,
-                            border="#9A999F", size=13)
 
-    pause_window.add_button(130, 200, cont_width // 2.5, 35, "Главное меню", 5,
+    pause_window.add_button(90, 200, cont_width // 2.5, 35, "Главное меню", 5,
                             10, border="#9A999F", size=13)
 
 
 def clear_pause():
+    """ Убираем окно паузы """
     pause_modal_sprites.empty()
     game_process_window()
     constants.pause = False
 
 
 def clear_win():
+    """ Убираем окно завершения игры """
     end_modal_sprites.empty()
     game_process_window()
 
 
 def exit_game():
+    """ Выход из игры """
     constants.running = False
 
 
 def scene_init(scene):
+    """ Переключатель сцен """
     islevel = scene.split()
     if islevel[0] == "Уровень":
         global CHOOSEN_LEVEL
@@ -498,6 +522,7 @@ def scene_init(scene):
               "Создатели": titres_window,
               "Рекорды": records_window,
               "Руководство": learn_window,
+              "_Старт": start_window,
               "Выход": exit_game,
               }
     buttons = {
