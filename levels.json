@@ -1,9 +1,9 @@
 {
   "turrets":
   {
-    "1": ["grenade_gun", "rocket_launcher", "machine_gun"],
-    "2": ["machine_gun", "heavy_turret", "laser_turret"],
-    "3": ["rocket_launcher", "machine_gun", "spitfire"],
+    "1": ["machine_gun"],
+    "2": ["heavy_turret", "laser_turret"],
+    "3": ["machine_gun", "spitfire"],
     "4": ["spitfire", "grenade_gun", "machine_gun"],
     "5": ["spitfire", "laser_turret", "heavy_turret"],
     "6": ["rocket_launcher", "spitfire", "grenade_gun"]
@@ -38,7 +38,7 @@
     "laser_turret": 1,
     "spitfire": 2,
     "rocket_launcher": 30,
-    "heavy_turret": 30,
+    "heavy_turret": 25,
     "grenade_gun": 30
   },
   "repairing_speed":
@@ -46,9 +46,9 @@
     "laser_turret": 5,
     "machine_gun": 1,
     "spitfire": 1,
-    "heavy_turret": 0.5,
-    "rocket_launcher": 0.5,
-    "grenade_gun": 0.5
+    "heavy_turret": 0.2,
+    "rocket_launcher": 0.2,
+    "grenade_gun": 0.2
   },
   "shells_life":
   {
@@ -126,13 +126,13 @@
   },
   "shell_damage":
   {
-    "laser_turret": 0.4,
-    "machine_gun": 3,
-    "heavy_turret": 5,
-    "spitfire": 1,
+    "laser_turret": 0.1,
+    "machine_gun": 1.5,
+    "heavy_turret": 10,
+    "spitfire": 0.2,
     "rocket_launcher": 0,
     "grenade_gun": 0,
-    "explosion": 10
+    "explosion": 5
   },
   "enemy_scales":
   {

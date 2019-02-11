@@ -115,8 +115,8 @@ class Turret(Sprite):
                         x1, y1 = self.rect.center
                         x2, y2 = pos
                         radius = int(math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2))
-                        if radius >= 500:
-                            radius = 500
+                        if radius >= 350:
+                            radius = 350
                         Shell(shells, self.rect.center, [10, radius * 2],
                               game_controller=self.game_controller,
                               image=textures["laser_shell"],

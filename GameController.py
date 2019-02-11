@@ -62,9 +62,10 @@ class GameController:
         self.win = value
         if self.win is not None:
             Interface.end_modal(value)
-        player = Interface.USERS[Interface.PLAYER]
-        if player["current_level"] <= constants.target_level:
-            Interface.USERS[Interface.PLAYER][
-                "current_level"] = constants.target_level + 1
-        Interface.USERS[Interface.PLAYER]["score"] += self.score
-        FileLoadManager.save_json_file(Interface.USERS)
+        if self.win:
+            player = Interface.USERS[Interface.PLAYER]
+            if player["current_level"] <= constants.target_level:
+                Interface.USERS[Interface.PLAYER][
+                    "current_level"] = constants.target_level + 1
+            Interface.USERS[Interface.PLAYER]["score"] += self.score
+            FileLoadManager.save_json_file(Interface.USERS)
