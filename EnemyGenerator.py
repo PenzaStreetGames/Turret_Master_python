@@ -18,7 +18,7 @@ class EnemyGenerator:
         self.create_radius = 300
         self.create_right = 800
         self.level_enemies = []
-        self.spawn_period = 15
+        self.spawn_period = 20
         self.enemy_number = 0
         self.counter = 0
         self.progress = 0
